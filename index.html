@@ -1,0 +1,3007 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة QDU للاختبار التفاعلي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&amp;family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .app-container {
+            min-height: 100%;
+            width: 100%;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        .app-container.light-mode {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2c3e50;
+        }
+
+        .app-container.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+        }
+
+        .top-controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .light-mode .control-btn {
+            background: white;
+            color: #4a90e2;
+        }
+
+        .dark-mode .control-btn {
+            background: #2c3e50;
+            color: #f39c12;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px 30px;
+        }
+
+        .platform-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+
+        .subject-name {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: inline-block;
+            color: #2c3e50;
+        }
+
+        .student-credit {
+            font-size: 0.95rem;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            font-weight: 600;
+        }
+
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .lecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .lecture-card:last-child {
+            grid-column: 1 / -1;
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .lecture-card {
+            padding: 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .light-mode .lecture-card {
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .lecture-card {
+            background: #2c3e50;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .lecture-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .lecture-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+
+        .lecture-number {
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+
+        .lecture-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 25px;
+        }
+
+        .light-mode .quiz-container {
+            background: white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .quiz-container {
+            background: #2c3e50;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .quiz-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .light-mode .progress-bar {
+            background: #e0e0e0;
+        }
+
+        .dark-mode .progress-bar {
+            background: #1a1a2e;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s;
+        }
+
+        .question-section {
+            margin: 30px 0;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            flex: 1;
+            line-height: 1.6;
+        }
+
+        .translate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .translate-btn:hover, .speak-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .speak-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            margin-right: 10px;
+        }
+
+        .translation {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.1rem;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            direction: rtl;
+            text-align: right;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .light-mode .translation {
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            color: #1e40af;
+            border: 2px solid #3b82f6;
+        }
+
+        .dark-mode .translation {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: #dbeafe;
+            border: 2px solid #60a5fa;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option-btn {
+            font-family: 'Poppins', sans-serif;
+            padding: 18px 25px;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .light-mode .option-btn {
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .dark-mode .option-btn {
+            background: #1a1a2e;
+            color: #e0e0e0;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateX(5px);
+            border-color: #667eea;
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+            border-color: #10b981;
+            animation: successPulse 0.5s ease-out;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+        }
+
+        .option-btn.incorrect {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            color: white;
+            border-color: #ef4444;
+            animation: shake 0.5s ease-out;
+        }
+
+        @keyframes successPulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(16, 185, 129, 0.6);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            direction: rtl;
+            text-align: right;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .feedback-box.error {
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .light-mode .feedback-box.error {
+            color: #92400e;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+        }
+
+        .dark-mode .feedback-box.error {
+            color: #fef3c7;
+            background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
+            border: 2px solid #fbbf24;
+        }
+
+        .next-btn {
+            margin-top: 25px;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .results-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .results-chart-wrapper {
+            max-width: 300px;
+            margin: 30px auto;
+            position: relative;
+        }
+
+        .circular-progress {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: auto;
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke-width: 15;
+        }
+
+        .light-mode .progress-ring-bg {
+            stroke: #e0e0e0;
+        }
+
+        .dark-mode .progress-ring-bg {
+            stroke: #1a1a2e;
+        }
+
+        .progress-ring {
+            fill: none;
+            stroke-width: 15;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 2s ease-out;
+        }
+
+        .progress-ring.fail {
+            stroke: url(#failGradient);
+        }
+
+        .progress-ring.pass {
+            stroke: url(#passGradient);
+        }
+
+        .progress-ring.excellent {
+            stroke: url(#excellentGradient);
+            filter: drop-shadow(0 0 10px rgba(246, 211, 101, 0.6));
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(246, 211, 101, 0.6));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(246, 211, 101, 0.9));
+            }
+        }
+
+        .results-center-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .results-score {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .results-score.fail {
+            color: #eb3349;
+        }
+
+        .results-score.pass {
+            color: #00b09b;
+        }
+
+        .results-score.excellent {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: scoreCount 2s ease-out;
+        }
+
+        @keyframes scoreCount {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .results-label {
+            font-size: 0.95rem;
+            opacity: 0.7;
+            margin-top: 8px;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .performance-badge {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 20px 0;
+            font-family: 'Tajawal', sans-serif;
+            animation: badgeBounce 0.6s ease-out;
+        }
+
+        @keyframes badgeBounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .badge-fail {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(235, 51, 73, 0.4);
+        }
+
+        .badge-pass {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(0, 176, 155, 0.4);
+        }
+
+        .badge-excellent {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(246, 211, 101, 0.5);
+            animation: badgeBounce 0.6s ease-out, shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                box-shadow: 0 5px 20px rgba(246, 211, 101, 0.5);
+            }
+            50% {
+                box-shadow: 0 8px 30px rgba(246, 211, 101, 0.8);
+            }
+        }
+
+        .results-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 40px auto;
+            max-width: 650px;
+        }
+
+        .stat-card {
+            padding: 25px 20px;
+            border-radius: 18px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .light-mode .stat-card {
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .stat-card {
+            background: #1a1a2e;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .stat-card.correct-card {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 2px solid #10b981;
+        }
+
+        .dark-mode .stat-card.correct-card {
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+            border: 2px solid #34d399;
+        }
+
+        .stat-card.wrong-card {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 2px solid #ef4444;
+        }
+
+        .dark-mode .stat-card.wrong-card {
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+            border: 2px solid #f87171;
+        }
+
+        .stat-card.total-card {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+        }
+
+        .dark-mode .stat-card.total-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            border: 2px solid #60a5fa;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            display: inline-block;
+            animation: iconPop 0.5s ease-out;
+        }
+
+        @keyframes iconPop {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 10px 0;
+            line-height: 1;
+            animation: countUp 1.5s ease-out;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card.correct-card .stat-value {
+            color: #059669;
+        }
+
+        .dark-mode .stat-card.correct-card .stat-value {
+            color: #34d399;
+        }
+
+        .stat-card.wrong-card .stat-value {
+            color: #dc2626;
+        }
+
+        .dark-mode .stat-card.wrong-card .stat-value {
+            color: #f87171;
+        }
+
+        .stat-card.total-card .stat-value {
+            color: #2563eb;
+        }
+
+        .dark-mode .stat-card.total-card .stat-value {
+            color: #60a5fa;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .stat-card.correct-card .stat-label {
+            color: #047857;
+        }
+
+        .dark-mode .stat-card.correct-card .stat-label {
+            color: #a7f3d0;
+        }
+
+        .stat-card.wrong-card .stat-label {
+            color: #b91c1c;
+        }
+
+        .dark-mode .stat-card.wrong-card .stat-label {
+            color: #fecaca;
+        }
+
+        .stat-card.total-card .stat-label {
+            color: #1d4ed8;
+        }
+
+        .dark-mode .stat-card.total-card .stat-label {
+            color: #bfdbfe;
+        }
+
+        .results-message {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 25px 0;
+            font-family: 'Tajawal', sans-serif;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .secondary-btn {
+            background: transparent;
+            border: 2px solid #667eea;
+        }
+
+        .light-mode .secondary-btn {
+            color: #667eea;
+        }
+
+        .dark-mode .secondary-btn {
+            color: #a78bfa;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .review-section {
+            margin-top: 40px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .review-question {
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .light-mode .review-question {
+            background: #f8f9fa;
+        }
+
+        .dark-mode .review-question {
+            background: #1a1a2e;
+        }
+
+        .review-question-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .review-answer {
+            font-family: 'Poppins', sans-serif;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .review-answer.user {
+            background: rgba(235, 51, 73, 0.15);
+            color: #eb3349;
+        }
+
+        .review-answer.correct {
+            background: rgba(0, 176, 155, 0.15);
+            color: #00b09b;
+        }
+
+        .confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                padding: 15px;
+            }
+
+            .lecture-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 15px 20px;
+            }
+
+            .platform-title {
+                font-size: 1.6rem;
+                padding: 15px 20px;
+            }
+
+            .subject-name {
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+
+            .student-credit {
+                font-size: 0.85rem;
+                padding: 10px 20px;
+            }
+
+            .top-controls {
+                top: 10px;
+                left: 10px;
+                gap: 8px;
+            }
+
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .lecture-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            .lecture-card {
+                padding: 25px 20px;
+            }
+
+            .lecture-card:last-child {
+                max-width: 100%;
+            }
+
+            .lecture-icon {
+                font-size: 3rem;
+            }
+
+            .lecture-title {
+                font-size: 1rem;
+            }
+
+            .quiz-container {
+                padding: 20px 15px;
+                border-radius: 20px;
+            }
+
+            .quiz-title {
+                font-size: 1.4rem;
+            }
+
+            .question-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .question-text {
+                font-size: 1rem;
+            }
+
+            .translate-btn {
+                align-self: flex-start;
+                padding: 10px 18px;
+                font-size: 0.95rem;
+            }
+
+            .translation {
+                font-size: 0.95rem;
+                padding: 12px;
+            }
+
+            .option-btn {
+                padding: 15px 18px;
+                font-size: 0.95rem;
+            }
+
+            .feedback-box {
+                padding: 15px;
+                font-size: 0.95rem;
+            }
+
+            .next-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+                width: 100%;
+            }
+
+            .results-container {
+                padding: 30px 15px;
+            }
+
+            .results-container h2 {
+                font-size: 1.6rem;
+            }
+
+            .results-chart-wrapper {
+                max-width: 250px;
+            }
+
+            .results-score {
+                font-size: 2.5rem;
+            }
+
+            .results-label {
+                font-size: 0.85rem;
+            }
+
+            .performance-badge {
+                padding: 10px 25px;
+                font-size: 1.05rem;
+            }
+
+            .results-stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 20px 15px;
+            }
+
+            .stat-icon {
+                font-size: 2rem;
+            }
+
+            .stat-value {
+                font-size: 2.2rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+            }
+
+            .results-message {
+                font-size: 1.1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .action-btn {
+                width: 100%;
+                padding: 12px 25px;
+            }
+
+            .review-question {
+                padding: 18px;
+            }
+
+            .review-question-text {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .platform-title {
+                font-size: 1.4rem;
+                padding: 12px 15px;
+            }
+
+            .subject-name {
+                font-size: 0.9rem;
+                padding: 10px 15px;
+            }
+
+            .student-credit {
+                font-size: 0.8rem;
+                padding: 8px 15px;
+            }
+
+            .lecture-card {
+                padding: 20px 15px;
+            }
+
+            .lecture-icon {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+            }
+
+            .lecture-number {
+                font-size: 0.85rem;
+            }
+
+            .lecture-title {
+                font-size: 0.95rem;
+            }
+
+            .quiz-container {
+                padding: 15px 12px;
+            }
+
+            .quiz-title {
+                font-size: 1.2rem;
+            }
+
+            .question-text {
+                font-size: 0.95rem;
+            }
+
+            .option-btn {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+
+            .results-chart-wrapper {
+                max-width: 200px;
+            }
+
+            .results-score {
+                font-size: 2rem;
+            }
+
+            .stat-value {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .lecture-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .lecture-card:last-child {
+                grid-column: span 2;
+                max-width: 350px;
+            }
+
+            .results-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+ </head>
+ <body>
+  <div class="app-container light-mode" id="app">
+   <div class="top-controls"><button class="control-btn" id="themeToggle" title="تبديل الوضع">☀️</button> <button class="control-btn" id="fullscreenToggle" title="ملء الشاشة">⛶</button>
+   </div>
+   <div class="header">
+    <h1 class="platform-title" id="platformTitle">منصة QDU للاختبار التفاعلي</h1>
+    <p class="subject-name" id="subjectName">مادة الاجهزة الشعاعية</p>
+    <p class="student-credit">إعداد الطالب: <span id="studentName">مقتدى الكناني</span></p>
+   </div>
+   <div class="content-wrapper">
+    <div id="lectureSelection">
+     <div class="lecture-grid" id="lectureGrid"></div>
+    </div>
+    <div id="quizSection" class="hidden">
+     <div class="quiz-container">
+      <div class="quiz-header">
+       <h2 class="quiz-title" id="quizTitle"></h2>
+       <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+       </div>
+       <p style="margin-top: 10px; font-size: 1rem;" id="questionCounter"></p>
+      </div>
+      <div class="question-section" id="questionSection"></div>
+     </div>
+    </div>
+    <div id="resultsSection" class="hidden">
+     <div class="quiz-container">
+      <div class="results-container">
+       <h2 style="font-size: 2rem; margin-bottom: 15px; font-family: 'Tajawal', sans-serif;">النتيجة النهائية</h2>
+       <div class="results-chart-wrapper">
+        <svg viewbox="0 0 200 200" class="circular-progress"><defs>
+          <lineargradient id="failGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+           <stop offset="0%" style="stop-color:#eb3349;stop-opacity:1" />
+           <stop offset="100%" style="stop-color:#f45c43;stop-opacity:1" />
+          </lineargradient>
+          <lineargradient id="passGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+           <stop offset="0%" style="stop-color:#00b09b;stop-opacity:1" />
+           <stop offset="100%" style="stop-color:#96c93d;stop-opacity:1" />
+          </lineargradient>
+          <lineargradient id="excellentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+           <stop offset="0%" style="stop-color:#f6d365;stop-opacity:1" />
+           <stop offset="100%" style="stop-color:#fda085;stop-opacity:1" />
+          </lineargradient>
+         </defs> <circle class="progress-ring-bg" cx="100" cy="100" r="85"></circle> <circle class="progress-ring" id="progressRing" cx="100" cy="100" r="85" stroke-dasharray="534" stroke-dashoffset="534"></circle>
+        </svg>
+        <div class="results-center-content">
+         <div class="results-score" id="finalScore">
+          0%
+         </div>
+         <div class="results-label">
+          النسبة المئوية
+         </div>
+        </div>
+       </div>
+       <div class="performance-badge" id="performanceBadge"></div>
+       <div class="results-stats">
+        <div class="stat-card correct-card">
+         <div class="stat-icon">
+          ✅
+         </div>
+         <div class="stat-value" id="correctAnswers">
+          0
+         </div>
+         <div class="stat-label">
+          إجابات صحيحة
+         </div>
+        </div>
+        <div class="stat-card wrong-card">
+         <div class="stat-icon">
+          ❌
+         </div>
+         <div class="stat-value" id="wrongAnswers">
+          0
+         </div>
+         <div class="stat-label">
+          إجابات خاطئة
+         </div>
+        </div>
+        <div class="stat-card total-card">
+         <div class="stat-icon">
+          📊
+         </div>
+         <div class="stat-value" id="totalQuestions">
+          0
+         </div>
+         <div class="stat-label">
+          مجموع الأسئلة
+         </div>
+        </div>
+       </div>
+       <p class="results-message" id="resultsMessage"></p>
+       <div class="action-buttons">
+        <button class="action-btn primary-btn" id="reviewBtn">مراجعة الاختبار</button>
+        <button class="action-btn secondary-btn" id="downloadResultBtn">📸 تنزيل النتيجة</button>
+        <button class="action-btn secondary-btn" id="backToLectures">العودة للمحاضرات</button>
+       </div>
+       <div id="reviewContainer" class="hidden review-section"></div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+        const defaultConfig = {
+            platform_title: "منصة QDU للاختبار التفاعلي",
+            subject_name: "مادة الفيزياء الشعاعية",
+            student_name: "مقتدى الكناني"
+        };
+
+        const lectures = [
+            {
+                id: 1,
+                title: "محاضرة 1",
+                icon: "📘",
+                questions: [
+                    {
+                        question: "1. What is the meaning of the Greek word 'tomos' in Tomography?",
+                        translation: "شنو معنى الكلمة اليونانية 'tomos' بكلمة Tomography؟",
+                        options: ["A) Drawing", "B) Computer", "C) Slice or section", "D) Rotation"],
+                        correct: 2,
+                        explanation: "كلمة tomos باليوناني معناها (شريحة أو مقطع)، ولهذا نسميه التصوير المقطعي."
+                    },
+                    {
+                        question: "2. Which technique is used to generate 3D images from a large series of 2D X-ray images?",
+                        translation: "شنو التقنية اللي نستخدمها حتى نولد صور ثلاثية الأبعاد من مجموعة صور 2D؟",
+                        options: ["A) Manual drawing", "B) Digital geometry processing", "C) Chemical processing", "D) Thermal imaging"],
+                        correct: 1,
+                        explanation: "نستخدم المعالجة الهندسية الرقمية (Digital geometry processing) حتى نجمع الصور ونطلع بصورة 3D."
+                    },
+                    {
+                        question: "3. Computed Tomography (CT) is also commonly known as:",
+                        translation: "بشنو هم ينعرف التصوير المقطعي المحوسب (CT)؟",
+                        options: ["A) Traditional Radiography", "B) Computed axial tomography scan", "C) Magnetic Resonance Imaging", "D) Ultrasound slicing"],
+                        correct: 1,
+                        explanation: "الـ CT كان يُعرف سابقاً بالـ CAT scan (التصوير المقطعي المحوري)."
+                    },
+                    {
+                        question: "4. How does the radiation dose in a CT procedure compare to conventional radiography?",
+                        translation: "شلون تقارن جرعة الإشعاع بالـ CT ويه الأشعة التقليدية؟",
+                        options: ["A) CT dose is relatively lower", "B) CT dose is exactly the same", "C) CT dose is relatively higher", "D) CT does not use radiation"],
+                        correct: 2,
+                        explanation: "بالـ CT الجرعة تكون أعلى نسبياً لأن الجهاز ياخذ صور هواية ومن زوايا مختلفة."
+                    },
+                    {
+                        question: "5. CT imaging is often referred to as 'cross-sectional imaging'. What does this mean?",
+                        translation: "الـ CT يسموه (التصوير المقطعي العرضي). شنو يعني هذا؟",
+                        options: ["A) It only images the skin surface", "B) It produces images of specific 'slices' of the body", "C) It only captures the bones in 2D", "D) It uses sound waves to cross the body"],
+                        correct: 1,
+                        explanation: "هذا يعني إن الجهاز يطلع صور عبارة عن شرائح (مَقاطع) محددة من الجسم مو مجرد صورة مسطحة."
+                    },
+                    {
+                        question: "6. Why do bones and teeth appear white on a traditional X-ray image?",
+                        translation: "ليش العظام والأسنان تطلع بيضة بصورة الأشعة العادية؟",
+                        options: ["A) Because they reflect all radiation", "B) Because they contain high levels of calcium that block radiation", "C) Because they allow radiation to pass through easily", "D) Because the film is naturally white"],
+                        correct: 1,
+                        explanation: "لأنها تحتوي على نسبة عالية من الكالسيوم اللي يمنع الإشعاع من العبور (يوهن الإشعاع)."
+                    },
+                    {
+                        question: "7. In a radiograph, how do soft tissues appear?",
+                        translation: "بالأشعة العادية، الأنسجة الرخوة شلون تطلع؟",
+                        options: ["A) White", "B) Gray or black", "C) Bright yellow", "D) Transparent"],
+                        correct: 1,
+                        explanation: "الأنسجة الرخوة تسمح بعبور الإشعاع أكثر فتبين بلون رصاصي أو أسود (Gray or black)."
+                    },
+                    {
+                        question: "8. Which of the following is 'ideal' for spotting narrowed joint spaces and dislocations?",
+                        translation: "شنو هو الفحص المثالي حتى نكتشف الخلع وضيق المفاصل؟",
+                        options: ["A) MRI", "B) Traditional X-ray", "C) Ultrasound", "D) Nuclear medicine"],
+                        correct: 1,
+                        explanation: "الأشعة العادية (Traditional X-ray) ممتازة ومثالية جداً لفحص العظام والمفاصل والخلع."
+                    },
+                    {
+                        question: "9. What is a major advantage of a CT scan over a simple X-ray study?",
+                        translation: "شنو الميزة الجبيرة للـ CT مقارنة بالأشعة البسيطة؟",
+                        options: ["A) It is slower and more relaxed", "B) It offers 360-degree views and higher detail", "C) It uses no computer processing", "D) It only provides 2D images"],
+                        correct: 1,
+                        explanation: "الـ CT يفتر 360 درجة وينطي صور مقطعية بيها تفاصيل أعلى بكثير من الأشعة العادية."
+                    },
+                    {
+                        question: "10. Which imaging method is better at capturing bones, soft tissues, and blood vessels all at the same time?",
+                        translation: "يا طريقة تصوير أحسن بلقط العظام والأنسجة والأوعية الدموية بوقت واحد؟",
+                        options: ["A) Traditional X-ray", "B) CT scan", "C) Electrocardiogram (ECG)", "D) Microscopy"],
+                        correct: 1,
+                        explanation: "جهاز الـ CT scan متميز جداً بتصوير كل هاي التفاصيل ويه بعض."
+                    },
+                    {
+                        question: "11. What is the primary function of the 'Patient Table' in a CT system?",
+                        translation: "شنو الوظيفة الأساسية لطاولة المريض بجهاز الـ CT؟",
+                        options: ["A) To generate X-ray beams", "B) To move the patient into the gantry", "C) To process digital signals", "D) To display the final image"],
+                        correct: 1,
+                        explanation: "الوظيفة الأساسية هي تحريك وتدخيل المريض لداخل فتحة الجهاز (الـ Gantry)."
+                    },
+                    {
+                        question: "12. Where are the X-ray tube generator and detector array located?",
+                        translation: "وين صاير مكان أنبوب الأشعة وكاشف الإشعاع؟",
+                        options: ["A) Inside the operating console", "B) In the patient's waiting room", "C) Inside the scanner gantry", "D) On the computer monitor"],
+                        correct: 2,
+                        explanation: "أنبوب الأشعة والـ Detector موجودات بداخل الـ Gantry (فتحة الجهاز الرئيسية)."
+                    },
+                    {
+                        question: "13. During a scan, how is the X-ray beam aimed at the patient?",
+                        translation: "أثناء الفحص، شلون تتسلط حزمة الأشعة على المريض؟",
+                        options: ["A) As a wide, stationary beam", "B) As a narrow beam", "C) As a vertical beam", "D) As a light wave"],
+                        correct: 1,
+                        explanation: "حزمة الأشعة بالـ CT تكون ضيقة (Narrow beam) وتفتر حول المريض."
+                    },
+                    {
+                        question: "14. What happens to the X-rays that pass through the patient's body?",
+                        translation: "شراح يصير للأشعة السينية من تعبر جسم المريض؟",
+                        options: ["A) They are absorbed and disappear", "B) They are detected on the opposite side", "C) They turn into sound waves", "D) They are reflected back to the tube"],
+                        correct: 1,
+                        explanation: "الأشعة اللي تعبر الجسم راح يتم اكتشافها (Detected) بواسطة كواشف موجودة بالجهة المقابلة للأنبوب."
+                    },
+                    {
+                        question: "15. What is the role of the machine's computer in the CT process?",
+                        translation: "شنو دور الكمبيوتر بعملية الـ CT؟",
+                        options: ["A) To move the gantry manually", "B) To process detected signals into cross-sectional images", "C) To cool down the patient table", "D) To inject the contrast material"],
+                        correct: 1,
+                        explanation: "الكمبيوتر ياخذ الإشارات اللي انلگطت ويعالجها حتى يحولها إلى صور مقطعية (Cross-sectional images)."
+                    },
+                    {
+                        question: "16. CT is considered the best method for detecting cancers in which areas?",
+                        translation: "الـ CT يُعتبر أفضل طريقة لاكتشاف السرطانات بيا مناطق؟",
+                        options: ["A) Only the brain and skull", "B) Chest, abdomen, and pelvis", "C) Teeth and hair", "D) Fingers and toes"],
+                        correct: 1,
+                        explanation: "الـ CT هو الأفضل في فحص الصدر والبطن والحوض (Chest, abdomen, and pelvis) واكتشاف الأورام بيهم."
+                    },
+                    {
+                        question: "17. Which of the following can be spotted by a CT scan?",
+                        translation: "يا من هذي الأشياء نكدر نكتشفها بالـ CT؟",
+                        options: ["A) Only major fractures", "B) Subtle bone fractures and organ injuries", "C) Skin rashes", "D) Common flu"],
+                        correct: 1,
+                        explanation: "الـ CT يكدر يكشف الكسور الدقيقة (Subtle bone fractures) وإصابات الأعضاء الداخلية بدقة عالية."
+                    },
+                    {
+                        question: "18. CT plays a significant role in diagnosing vascular diseases that lead to:",
+                        translation: "الـ CT إله دور مهم بتشخيص أمراض الأوعية الدموية اللي ممكن تؤدي إلى شنو؟",
+                        options: ["A) Bone growth", "B) Stroke or kidney failure", "C) Improved vision", "D) Muscle strength"],
+                        correct: 1,
+                        explanation: "أمراض الأوعية الدموية مثل التخثر ممكن تسبب جلطة (Stroke) أو فشل كلوي."
+                    },
+                    {
+                        question: "19. Why is 'Contrast Material' used when scanning soft tissues?",
+                        translation: "ليش نستخدم مادة التباين (الصبغة) من نفحص الأنسجة الرخوة؟",
+                        options: ["A) To make the patient feel warm", "B) Because soft tissues don't show clearly", "C) To reduce the radiation dose", "D) To speed up the rotation of the gantry"],
+                        correct: 1,
+                        explanation: "لأن الأنسجة الرخوة متتشاف بوضوح بدون مادة ملونة تبرزها بالصورة."
+                    },
+                    {
+                        question: "20. What are the two most common materials used for CT contrast?",
+                        translation: "شنو أكثر مادتين شائعة تُستخدم كمواد تباين بالـ CT؟",
+                        options: ["A) Sodium and Potassium", "B) Iodine and Barium sulfate", "C) Calcium and Magnesium", "D) Iron and Lead"],
+                        correct: 1,
+                        explanation: "اليود (Iodine) وكبريتات الباريوم (Barium sulfate) هي أكثر المواد المستخدمة كصبغة."
+                    },
+                    {
+                        question: "21. How does contrast material appear on a CT scan?",
+                        translation: "شلون تطلع مادة التباين (الصبغة) بصورة الـ CT؟",
+                        options: ["A) It appears black", "B) It appears white", "C) It appears transparent", "D) It has no color"],
+                        correct: 1,
+                        explanation: "لأن كثافتها عالية، مادة التباين تبين بيضة (White) بالصورة."
+                    },
+                    {
+                        question: "22. If the target of the scan is the 'Urinary Tract', how is the dye usually delivered?",
+                        translation: "إذا جان الهدف فحص المسالك البولية، شلون ينطون الصبغة للمريض؟",
+                        options: ["A) Orally (drinking)", "B) Via Enema (rectum)", "C) By Injection into a vein", "D) Through the ears"],
+                        correct: 2,
+                        explanation: "للمسالك البولية والأوعية الدموية ينطون الصبغة عن طريق الحقن بالوريد (Injection)."
+                    },
+                    {
+                        question: "23. When the target of the scan is the 'Digestive Tract', the contrast is given:",
+                        translation: "من نفحص الجهاز الهضمي، شلون ننطي مادة التباين؟",
+                        options: ["A) Orally", "B) By injection", "C) Through a skin patch", "D) It is not needed"],
+                        correct: 0,
+                        explanation: "لفحص الجهاز الهضمي، المريض يشرب الصبغة عن طريق الفم (Orally)."
+                    },
+                    {
+                        question: "24. What is the delivery method for contrast if the scan target is the 'Intestines'?",
+                        translation: "شنو طريقة إعطاء الصبغة إذا چان الفحص للأمعاء؟",
+                        options: ["A) Injection", "B) Enema", "C) Breathing it in", "D) Eye drops"],
+                        correct: 1,
+                        explanation: "لفحص الأمعاء والمستقيم، يتم إعطاء مادة التباين عن طريق الحقنة الشرجية (Enema)."
+                    },
+                    {
+                        question: "25. Contrast material highlights which of the following?",
+                        translation: "مادة التباين تبرز يا من هاي الأجزاء بالجسم؟",
+                        options: ["A) Only the outer skin", "B) Blood vessels, organs, and other tissues", "C) Only the patient's clothing", "D) The X-ray tube itself"],
+                        correct: 1,
+                        explanation: "الصبغة تساعد حتى تبرز وتوضح الأوعية الدموية والأعضاء والأنسجة الداخلية."
+                    },
+                    {
+                        question: "26. What is the origin of the word 'tomography'?",
+                        translation: "شنو أصل كلمة tomography؟",
+                        options: ["A) Latin words", "B) Greek words", "C) French words", "D) German words"],
+                        correct: 1,
+                        explanation: "الكلمة مشتقة من كلمات يونانية (Greek words): tomos (مقطع) و graphein (رسم)."
+                    },
+                    {
+                        question: "27. Which of the following conditions can traditional X-rays ideally spot?",
+                        translation: "يا حالة من هاي الحالات تعتبر الأشعة التقليدية مثالية لاكتشافها؟",
+                        options: ["A) Blood clots and organ injuries", "B) dislocations and narrowed joint spaces", "C) Soft tissue tumors", "D) Vascular diseases"],
+                        correct: 1,
+                        explanation: "الأشعة التقليدية ممتازة لاكتشاف الخلع وضيق المفاصل (dislocations and narrowed joint spaces)."
+                    },
+                    {
+                        question: "28. When is contrast material injected directly into a vein?",
+                        translation: "متى تُحقن مادة التباين مباشرة في الوريد؟",
+                        options: ["A) When the scan targets the digestive tract", "B) When the scan targets blood vessels and urinary tract", "C) When the scan targets the intestines", "D) When the scan targets the lungs"],
+                        correct: 1,
+                        explanation: "تنحقن بالوريد من يكون الفحص مستهدف الأوعية الدموية والمسالك البولية حتى تبين بوضوح."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "محاضرة 2",
+                icon: "📗",
+                questions: [
+                    {
+                        question: "1. What are the three main systems of a CT scanner?",
+                        translation: "شنو هي الأنظمة الثلاثة الرئيسية بجهاز الـ CT؟",
+                        options: ["A) Gantry, table, and control room", "B) Generator, detector, and computer", "C) X-ray tube, filter, and collimator", "D) Detector, monitor, and processor"],
+                        correct: 0,
+                        explanation: "الأنظمة الأساسية هي الـ Gantry (فتحة الجهاز)، الـ Table (الطاولة)، والـ Control room (غرفة التحكم)."
+                    },
+                    {
+                        question: "2. What is the primary function of the generator in a CT scanner?",
+                        translation: "شنو الوظيفة الأساسية للمولد (Generator) بالـ CT؟",
+                        options: ["A) To detect X-rays", "B) To generate electrical energy", "C) To control patient movement", "D) To convert signals into images"],
+                        correct: 1,
+                        explanation: "الـ Generator وظيفته يولد طاقة كهربائية عالية حتى يشغل أنبوب الأشعة."
+                    },
+                    {
+                        question: "3. How long does it take for the gantry to complete a 360° rotation?",
+                        translation: "شكد يحتاج الـ gantry وقت حتى يكمل فرة كاملة 360 درجة؟",
+                        options: ["A) 0.1 seconds", "B) 0.2 seconds", "C) 0.3 seconds", "D) 0.5 seconds"],
+                        correct: 2,
+                        explanation: "الأجهزة الحديثة تكمل الفرة الكاملة بـ 0.3 ثانية بس، وهذا يخلي الفحص سريع جداً."
+                    },
+                    {
+                        question: "4. What is the approximate weight of the CT gantry?",
+                        translation: "شكد تقريباً وزن فتحة الجهاز (CT gantry)؟",
+                        options: ["A) 200 kg", "B) 300 kg", "C) 400 kg", "D) 500 kg"],
+                        correct: 3,
+                        explanation: "وزن الـ Gantry ثقيل جداً ويوصل تقريباً لـ 500 كيلوغرام (نص طن)."
+                    },
+                    {
+                        question: "5. What is the main function of the X-ray tube in CT imaging?",
+                        translation: "شنو الوظيفة الرئيسية لأنبوب الأشعة بالـ CT؟",
+                        options: ["A) To detect radiation", "B) To produce X-rays", "C) To analyze signals", "D) To control image thickness"],
+                        correct: 1,
+                        explanation: "الأنبوب هو المصدر الأساسي، ووظيفته ينتج الأشعة السينية اللي تخترق المريض."
+                    },
+                    {
+                        question: "6. What is the electron source in an X-ray tube typically made from?",
+                        translation: "مصدر الإلكترونات بأنبوب الأشعة من شنو مصنوع عادة؟",
+                        options: ["A) Copper filament", "B) Tungsten filament", "C) Aluminum filament", "D) Iron filament"],
+                        correct: 1,
+                        explanation: "مصنوع من سلك تنغستن (Tungsten filament) لأنه يتحمل حرارة عالية جداً بدون ما يذوب."
+                    },
+                    {
+                        question: "7. Which component of the X-ray tube acts as the negative electrode?",
+                        translation: "أي جزء بأنبوب الأشعة يشتغل كقطب سالب؟",
+                        options: ["A) Anode", "B) Cathode", "C) Filter", "D) Collimator"],
+                        correct: 1,
+                        explanation: "الكاثود (Cathode) هو القطب السالب اللي يطلق الإلكترونات."
+                    },
+                    {
+                        question: "8. What is the function of the filter in a CT scanner?",
+                        translation: "شنو وظيفة الفلتر (Filter) بجهاز الـ CT؟",
+                        options: ["A) To increase X-ray energy", "B) To absorb low-energy photons", "C) To detect radiation", "D) To rotate the gantry"],
+                        correct: 1,
+                        explanation: "الفلتر يمتص الفوتونات اللي طاقتها ضعيفة لأنها تضر المريض بدون فايدة للصورة."
+                    },
+                    {
+                        question: "9. Why are low-energy photons removed by the filter?",
+                        translation: "ليش يتم إزالة الفوتونات ضعيفة الطاقة بالفلتر؟",
+                        options: ["A) Because they damage the detector", "B) Because they do not contribute to the image", "C) Because they slow down the scanning process", "D) Because they reduce gantry rotation speed"],
+                        correct: 1,
+                        explanation: "لأنها ما تساهم بتكوين الصورة مجرد تزيد الجرعة الإشعاعية على جسم المريض (do not contribute to the image)."
+                    },
+                    {
+                        question: "10. What is the primary function of the collimator in CT scanning?",
+                        translation: "شنو الوظيفة الأساسية للـ collimator بالـ CT؟",
+                        options: ["A) To generate X-rays", "B) To determine the radiation field", "C) To store raw data", "D) To rotate the detector"],
+                        correct: 1,
+                        explanation: "الـ collimator يحدد حجم ومجال الإشعاع (radiation field) حتى ما يروح إشعاع لأماكن ما محتاجيها."
+                    },
+                    {
+                        question: "11. How does reducing scatter radiation affect CT images?",
+                        translation: "شلون يؤثر تقليل الإشعاع المشتت على صور الـ CT؟",
+                        options: ["A) It decreases image quality", "B) It increases image quality", "C) It stops radiation completely", "D) It slows the scanning process"],
+                        correct: 1,
+                        explanation: "من نقلل التشتت (scatter)، الصورة راح تزيد جودتها وتصير أوضح (increases image quality)."
+                    },
+                    {
+                        question: "12. What does the collimator control in CT imaging?",
+                        translation: "شنو اللي يتحكم بي الـ collimator بتصوير الـ CT؟",
+                        options: ["A) The temperature of the gantry", "B) The thickness of the CT image", "C) The computer speed", "D) The detector voltage"],
+                        correct: 1,
+                        explanation: "الـ collimator يتحكم بسمك الشريحة أو صورة الـ CT (thickness of the CT image)."
+                    },
+                    {
+                        question: "13. What happens to X-rays when they pass through the patient's body?",
+                        translation: "شراح يصير للأشعة من تعبر بجسم المريض؟",
+                        options: ["A) They are completely absorbed", "B) They are reflected back", "C) They are attenuated by absorption and scatter", "D) They disappear completely"],
+                        correct: 2,
+                        explanation: "الأشعة راح تضعف (attenuated) بسبب أن قسم منها يُمتص وقسم يتشتت بالأنسجة."
+                    },
+                    {
+                        question: "14. What is the primary function of the detector in CT scanners?",
+                        translation: "شنو الوظيفة الأساسية للـ Detector (الكاشف)؟",
+                        options: ["A) To rotate around the patient", "B) To convert radiation into electrical signals", "C) To produce X-rays", "D) To store patient information"],
+                        correct: 1,
+                        explanation: "الكاشف وظيفته يلگط الإشعاع ويحوله إلى إشارات كهربائية حتى الكمبيوتر يفهمها."
+                    },
+                    {
+                        question: "15. What type of detector is used in older CT scanners?",
+                        translation: "شنو نوع الكاشف اللي كان يُستخدم بأجهزة الـ CT القديمة؟",
+                        options: ["A) Xenon gas detector", "B) Solid-state crystal detector", "C) Liquid detector", "D) Film detector"],
+                        correct: 0,
+                        explanation: "بالأجهزة القديمة چانوا يستخدمون كاشف غاز الزينون (Xenon gas detector)."
+                    },
+                    {
+                        question: "16. What is a disadvantage of Xenon gas detectors?",
+                        translation: "شنو العيب بكواشف غاز الزينون؟",
+                        options: ["A) They produce low-quality images", "B) They require gas to remain under pressure", "C) They cannot detect radiation", "D) They generate heat"],
+                        correct: 1,
+                        explanation: "من عيوبها أنها تحتاج إبقاء الغاز تحت ضغط مستمر (under pressure) حتى تشتغل عدل."
+                    },
+                    {
+                        question: "17. Which detector type is most widely used in modern CT scanners?",
+                        translation: "يا نوع من الكواشف هو الأكثر استخداماً بأجهزة الـ CT الحديثة؟",
+                        options: ["A) Xenon gas detector", "B) Solid-state crystal detector", "C) Film detector", "D) Liquid detector"],
+                        correct: 1,
+                        explanation: "كواشف البلورة الصلبة (Solid-state crystal detector) هي الأكثر استخداماً لسرعتها ودقتها."
+                    },
+                    {
+                        question: "18. What happens when X-rays collide with a solid-state crystal detector?",
+                        translation: "شراح يصير من تصطدم الأشعة بكاشف البلورة الصلبة؟",
+                        options: ["A) It produces heat", "B) It glows with light", "C) It reflects radiation", "D) It stops radiation"],
+                        correct: 1,
+                        explanation: "البلورة الصلبة راح تتوهج وتشع ضوء (glows with light) من يضربها الإشعاع."
+                    },
+                    {
+                        question: "19. What is the main purpose of the patient table in a CT scanner?",
+                        translation: "شنو الغرض الأساسي من طاولة المريض بالـ CT؟",
+                        options: ["A) To rotate around the patient", "B) To hold the patient during examination", "C) To produce radiation", "D) To detect X-rays"],
+                        correct: 1,
+                        explanation: "الطاولة تلزم وتشيل المريض بثبات وراحة أثناء الفحص (hold the patient)."
+                    },
+                    {
+                        question: "20. What are the main components found in the control room?",
+                        translation: "شنو المكونات الأساسية الموجودة بغرفة التحكم؟",
+                        options: ["A) Detector and gantry", "B) Operation console and computer", "C) Filter and collimator", "D) X-ray tube and table"],
+                        correct: 1,
+                        explanation: "غرفة التحكم بيها لوحة التشغيل (Operation console) والكمبيوتر الخاص بالفحص."
+                    },
+                    {
+                        question: "21. What is the main role of the operating console?",
+                        translation: "شنو الدور الرئيسي للوحة التشغيل (Operating console)؟",
+                        options: ["A) To detect radiation signals", "B) To serve as the master control center for inputting scan factors", "C) To produce X-rays", "D) To store patient belongings"],
+                        correct: 1,
+                        explanation: "هي تعتبر مركز التحكم الرئيسي (Master control center) اللي ندخل بيه كل عوامل وإعدادات الفحص."
+                    },
+                    {
+                        question: "22. What environmental conditions are typically maintained in the CT computer room?",
+                        translation: "شنو الظروف البيئية اللي لازم نحافظ عليها بغرفة كمبيوتر الـ CT؟",
+                        options: ["A) Temperature above 25°C", "B) Temperature below 20°C and humidity below 30%", "C) Humidity above 50%", "D) No specific conditions required"],
+                        correct: 1,
+                        explanation: "لازم الحرارة تكون أقل من 20 درجة والرطوبة أقل من 30% حتى الأجهزة متحمى وتخرب."
+                    },
+                    {
+                        question: "23. Which of the following components is NOT housed inside the CT gantry?",
+                        translation: "يا من هاي الأجزاء غير موجودة بداخل فتحة الجهاز (CT gantry)؟",
+                        options: ["A) X-ray tube and Detectors", "B) High-frequency generator", "C) The operating console", "D) Filters and Collimators"],
+                        correct: 2,
+                        explanation: "لوحة التحكم (operating console) موجودة بغرفة منعزلة عن الـ gantry لحماية التقني."
+                    },
+                    {
+                        question: "24. What is the maximum tilt angle of the CT gantry?",
+                        translation: "شكد أقصى زاوية ميلان يقدر يميلها الـ CT gantry؟",
+                        options: ["A) 15°", "B) 45°", "C) 30°", "D) 90°"],
+                        correct: 2,
+                        explanation: "فتحة الجهاز تكدر تميل لحد 30 درجة (30°) للأمام أو الخلف حسب الفحص."
+                    },
+                    {
+                        question: "25. The high-frequency generator in a CT scanner typically has a capacity of:",
+                        translation: "المولد عالي التردد بجهاز الـ CT عادة شكد سعته؟",
+                        options: ["A) 10 kW", "B) 60 kW", "C) 100 kW", "D) 500 kW"],
+                        correct: 1,
+                        explanation: "المولد عادة تكون سعته بحدود 60 كيلو واط (60 kW) حتى يجهز طاقة كافية للأنبوب."
+                    },
+                    {
+                        question: "26. In the X-ray tube, the Cathode serves as the _______ while the Anode serves as the _______.",
+                        translation: "بأنبوب الأشعة، الكاثود يمثل الـ _______ والأنود يمثل الـ _______.",
+                        options: ["A) Positive electrode / Negative electrode", "B) Negative electrode / Positive electrode", "C) Cooling system / Heating system", "D) Signal processor / Signal receiver"],
+                        correct: 1,
+                        explanation: "الكاثود هو القطب السالب (Negative) والأنود هو الموجب (Positive)."
+                    },
+                    {
+                        question: "27. What is the main purpose of using a 'Filter' in a CT scanner?",
+                        translation: "شنو الغرض الرئيسي من استخدام الفلتر بالـ CT؟",
+                        options: ["A) To make the X-ray beam wider", "B) To improve image quality and reduce patient dose", "C) To increase the number of low-energy photons", "D) To rotate the gantry faster"],
+                        correct: 1,
+                        explanation: "الفلتر يحسن جودة الصورة ويقلل جرعة الإشعاع على المريض لأنه يمتص الأشعة الضعيفة."
+                    },
+                    {
+                        question: "28. Which type of photons does the filter specifically absorb?",
+                        translation: "يا نوع من الفوتونات الفلتر يمتصها بالتحديد؟",
+                        options: ["A) High-energy photons", "B) Weak energy photons", "C) All photons produced by the tube", "D) Only photons that pass through the bone"],
+                        correct: 1,
+                        explanation: "الفلتر يمتص الفوتونات ضعيفة الطاقة (Weak energy photons) اللي متفيد الصورة."
+                    },
+                    {
+                        question: "29. By reducing scattering, collimators help in:",
+                        translation: "من يقللون التشتت، الكوليميترات (collimators) تساعد بشنو؟",
+                        options: ["A) Increasing the patient's dose", "B) Improving image quality", "C) Making the gantry weigh more", "D) Deleting raw data"],
+                        correct: 1,
+                        explanation: "بتقليل التشتت الإشعاعي راح تتحسن جودة الصورة بشكل كبير (Improving image quality)."
+                    },
+                    {
+                        question: "30. Who is responsible for choosing the thickness of the CT image by adjusting the collimator?",
+                        translation: "منو المسؤول عن اختيار سمك الصورة بتعديل الكوليميتر؟",
+                        options: ["A) The patient", "B) The hospital manager", "C) The radiologist", "D) The computer manufacturer"],
+                        correct: 2,
+                        explanation: "طبيب الأشعة (The radiologist) هو اللي يحدد السمك المطلوب للفحص."
+                    },
+                    {
+                        question: "31. Which type of detector requires the gas to be always under pressure?",
+                        translation: "يا نوع من الكواشف يحتاج أن يكون الغاز دائماً تحت ضغط؟",
+                        options: ["A) Solid-state crystal detector", "B) Xenon gas detector", "C) Liquid detector", "D) Digital monitor"],
+                        correct: 1,
+                        explanation: "كاشف غاز الزينون (Xenon gas detector) يحتاج ضغط عالي للغاز حتى يشتغل."
+                    },
+                    {
+                        question: "32. Why is the entrance for patients different from the entrance for the radiologist?",
+                        translation: "ليش باب دخول المريض يختلف عن باب دخول تقني الأشعة بالقسم؟",
+                        options: ["A) For aesthetic reasons", "B) For protection from infection", "C) To save electricity", "D) Because the gantry is too heavy"],
+                        correct: 1,
+                        explanation: "حتى يقللون من فرص انتقال العدوى ويحمون الكادر (protection from infection)."
+                    },
+                    {
+                        question: "33. What is the 'Master Control Center' of the CT scanner where scan factors are input?",
+                        translation: "شنو هو مركز التحكم الرئيسي اللي ندخل بيه عوامل الفحص؟",
+                        options: ["A) The Gantry", "B) The Patient Table", "C) The Operating Console", "D) The Generator"],
+                        correct: 2,
+                        explanation: "لوحة التحكم (Operating Console) هي المركز اللي نتحكم من خلاله بكل الفحص."
+                    },
+                    {
+                        question: "34. The reconstruction speed of a CT image is primarily dependent on:",
+                        translation: "سرعة معالجة وتكوين صورة الـ CT تعتمد بشكل أساسي على شنو؟",
+                        options: ["A) The weight of the gantry", "B) The computer's microprocessor and internal memory", "C) The size of the waiting room", "D) The type of lead glass used"],
+                        correct: 1,
+                        explanation: "سرعة المعالجة تعتمد على المعالج (microprocessor) والذاكرة الداخلية للكمبيوتر."
+                    },
+                    {
+                        question: "35. Typically, the operating console is made up of:",
+                        translation: "عادةً، لوحة التشغيل من شنو تتكون؟",
+                        options: ["A) A tube, a filter, and a collimator", "B) A computer, a keyboard, and multiple monitors", "C) A gantry, a table, and a locker", "D) A generator and a crystal"],
+                        correct: 1,
+                        explanation: "لوحة التحكم عبارة عن كمبيوتر وكيبورد ومجموعة شاشات للمراقبة وعرض الصور."
+                    },
+                    {
+                        question: "36. Why can high-frequency generators fit inside the gantry?",
+                        translation: "ليش المولدات عالية التردد يكدرون يخلوها بداخل الـ gantry؟",
+                        options: ["A) Because they are located outside the scan room", "B) Because they are so small", "C) Because they are liquid-cooled", "D) Because they require no power supply"],
+                        correct: 1,
+                        explanation: "لأن حجمها كلش صغير (so small)، فصنعوها بحيث تكفي تنحط بداخل الفتحة."
+                    },
+                    {
+                        question: "37. What is the maximum tilt angle of the gantry?",
+                        translation: "شنو أقصى زاوية ميلان للـ gantry؟",
+                        options: ["A) 15°", "B) 20°", "C) 25°", "D) 30°"],
+                        correct: 3,
+                        explanation: "أقصى زاوية ميلان للـ gantry هي 30 درجة (30°)."
+                    },
+                    {
+                        question: "38. What tube current can the generator provide at 125 kV?",
+                        translation: "شكد التيار اللي يكدر يجهزه المولد للأنبوب عند 125 kV؟",
+                        options: ["A) 400 mA", "B) 600 mA", "C) 800 mA", "D) 1000 mA"],
+                        correct: 2,
+                        explanation: "المولد يكدر يجهز تيار عالي يوصل لـ 800 mA عند جهد 125 kV."
+                    },
+                    {
+                        question: "39. What is the pulse duration of the generator?",
+                        translation: "شكد مدة النبضة (pulse duration) للمولد؟",
+                        options: ["A) 1-2 ms", "B) 2-4 ms", "C) 4-6 ms", "D) 6-8 ms"],
+                        correct: 1,
+                        explanation: "مدة النبضة تكون قصيرة جداً وتتراوح بين 2-4 مللي ثانية."
+                    },
+                    {
+                        question: "40. What is the function of the tube envelope in an X-ray tube?",
+                        translation: "شنو وظيفة الغلاف بأنبوب الأشعة؟",
+                        options: ["A) To generate electrons", "B) To focus the electron beam", "C) To maintain an interior vacuum", "D) To cool the anode"],
+                        correct: 2,
+                        explanation: "الغلاف (Envelope) وظيفته الأساسية يحافظ على الفراغ (Vacuum) بداخل الأنبوب."
+                    },
+                    {
+                        question: "41. What facilities are important to have in the CT department?",
+                        translation: "شنو المرافق اللي مهم تكون موجودة بقسم الـ CT؟",
+                        options: ["A) Only a waiting room", "B) A waiting room and changing room", "C) A cafeteria and gift shop", "D) A prayer room and library"],
+                        correct: 1,
+                        explanation: "مهم جداً يتوفر بالقسم غرفة انتظار (waiting room) وغرفة لتبديل الملابس (changing room)."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "محاضرة 3",
+                icon: "📕",
+                questions: [
+                    {
+                        question: "1. What is a projected ray in CT imaging?",
+                        translation: "شنو هو الشعاع المسقط (projected ray) بتصوير الـ CT؟",
+                        options: ["A) A wide beam of X-rays emitted in all directions", "B) A narrow beam of X-rays emitted from the X-ray tube", "C) A reflected radiation beam", "D) A scattered radiation beam"],
+                        correct: 1,
+                        explanation: "الشعاع المسقط هو حزمة ضيقة (narrow beam) من الأشعة تطلع من الأنبوب وتتسلط على المريض."
+                    },
+                    {
+                        question: "2. What is the main function of the collimator in forming a projected ray?",
+                        translation: "شنو دور الـ collimator بتكوين الشعاع المسقط؟",
+                        options: ["A) To increase radiation energy", "B) To focus the X-ray beam", "C) To convert radiation into signals", "D) To store projection data"],
+                        correct: 1,
+                        explanation: "الكوليميتر وظيفته يركز ويحدد حزمة الأشعة (focus the beam) حتى تصير دقيقة."
+                    },
+                    {
+                        question: "3. What happens when the projected ray passes through the patient's body?",
+                        translation: "شراح يصير للشعاع من يعبر جسم المريض؟",
+                        options: ["A) All X-rays are completely absorbed", "B) Some X-rays are absorbed while others are scattered", "C) All X-rays pass without interaction", "D) X-rays disappear completely"],
+                        correct: 1,
+                        explanation: "قسم من الأشعة راح يمتصها الجسم، وقسم ثاني راح يتشتت (absorbed and scattered)."
+                    },
+                    {
+                        question: "4. What does the detector record in CT imaging?",
+                        translation: "شنو اللي يسجله الـ detector بتصوير الـ CT؟",
+                        options: ["A) The patient's body temperature", "B) A projection of internal structures", "C) The density of bones only", "D) The radiation energy level"],
+                        correct: 1,
+                        explanation: "الكاشف (detector) راح يسجل إسقاط (projection) وظل للتراكيب الداخلية للجسم."
+                    },
+                    {
+                        question: "5. What is meant by a projection in CT scanning?",
+                        translation: "شنو يعني (إسقاط - projection) بتصوير الـ CT؟",
+                        options: ["A) A reflection of radiation from the detector", "B) A shadow of internal structures from a specific angle", "C) A measurement of tissue density", "D) A digital reconstruction image"],
+                        correct: 1,
+                        explanation: "الإسقاط يعني تكوين ظل للأعضاء والتراكيب الداخلية من زاوية محددة."
+                    },
+                    {
+                        question: "6. What is radiation attenuation?",
+                        translation: "شنو هو توهين الإشعاع (radiation attenuation)؟",
+                        options: ["A) The production of X-rays", "B) The reduction of radiation intensity by absorption or scatter", "C) The reflection of X-rays from tissues", "D) The storage of radiation energy"],
+                        correct: 1,
+                        explanation: "التوهين هو تقليل شدة وقوة الإشعاع من خلال امتصاصه أو تشتته بالأنسجة."
+                    },
+                    {
+                        question: "7. What is penetration in radiation physics?",
+                        translation: "شنو هو الاختراق (penetration) بفيزياء الإشعاع؟",
+                        options: ["A) The absorption of radiation by tissues", "B) The scattering of photons", "C) The fraction of radiation passing through an object", "D) The reflection of radiation"],
+                        correct: 2,
+                        explanation: "الاختراق هو نسبة الأشعة اللي تكدر تعبر الجسم وتخترقه للجهة الثانية."
+                    },
+                    {
+                        question: "8. What occurs during radiation absorption?",
+                        translation: "شنو اللي يصير بعملية امتصاص الإشعاع؟",
+                        options: ["A) Photons are reflected by tissues", "B) Photons transfer energy to tissue atoms", "C) Photons disappear instantly", "D) Photons increase in energy"],
+                        correct: 1,
+                        explanation: "بالامتصاص، الفوتونات تنطي طاقتها وتفرغها بذرات الأنسجة (transfer energy)."
+                    },
+                    {
+                        question: "9. What would happen if all radiation penetrated the object without attenuation?",
+                        translation: "شراح يصير لو كل الأشعة اخترقت الجسم بدون أي توهين؟",
+                        options: ["A) The image would appear completely white", "B) The image would appear completely black", "C) The image would be gray", "D) No image would be produced"],
+                        correct: 1,
+                        explanation: "لو كلها اخترقت الكاشف راح يقراها كلها وبالتالي الصورة راح تطلع سودة بالكامل (completely black)."
+                    },
+                    {
+                        question: "10. What type of image does CT produce?",
+                        translation: "شنو نوع الصورة اللي ينتجها الـ CT؟",
+                        options: ["A) A black and white image only", "B) A grayscale image between black and white", "C) A colored image", "D) A transparent image"],
+                        correct: 1,
+                        explanation: "الـ CT ينتج صورة بتدرج رمادي (grayscale) بيها درجات مختلفه بين الأبيض والأسود."
+                    },
+                    {
+                        question: "11. What determines the grayscale gradient in CT images?",
+                        translation: "شنو اللي يحدد تدرج اللون الرمادي بصورة الـ CT؟",
+                        options: ["A) The detector speed", "B) The degree of radiation absorption in tissues", "C) The gantry rotation speed", "D) The computer memory"],
+                        correct: 1,
+                        explanation: "درجة امتصاص الأنسجة للإشعاع هي اللي تحدد، كل نسيج إله درجة رمادي معينة حسب امتصاصه."
+                    },
+                    {
+                        question: "12. What happens to the CT image when radiation penetration increases?",
+                        translation: "شراح يصير لصورة الـ CT من يزيد اختراق الإشعاع (penetration)؟",
+                        options: ["A) The image becomes lighter", "B) The image becomes darker", "C) The image disappears", "D) The image becomes white"],
+                        correct: 1,
+                        explanation: "من يزيد الاختراق، يعني إشعاع هواي يوصل للكاشف، فالصورة تصير أغمق (darker)."
+                    },
+                    {
+                        question: "13. Why do bones appear white on CT or X-ray images?",
+                        translation: "ليش العظام تطلع بيضة بصورة الـ CT والأشعة؟",
+                        options: ["A) Because bones reflect radiation", "B) Because bones absorb more radiation due to their high density", "C) Because bones contain air", "D) Because the detector produces white color"],
+                        correct: 1,
+                        explanation: "لأن كثافة العظم عالية فتمتص كمية چبيرة من الإشعاع، واللي يمتص أكثر يطلع لونه أبيض."
+                    },
+                    {
+                        question: "14. Which factor does NOT affect X-ray penetration in the human body?",
+                        translation: "يا عامل من هذني (مــا) يأثر على اختراق الأشعة للجسم؟",
+                        options: ["A) X-ray energy", "B) Thickness", "C) Atomic number", "D) Room lighting"],
+                        correct: 3,
+                        explanation: "إضاءة الغرفة (Room lighting) مالها أي علاقة باختراق الأشعة السينية."
+                    },
+                    {
+                        question: "15. What happens to interaction probability when photon energy increases?",
+                        translation: "شراح يصير لاحتمالية التفاعل من تزيد طاقة الفوتون؟",
+                        options: ["A) It increases significantly", "B) It decreases", "C) It remains constant", "D) It becomes zero"],
+                        correct: 1,
+                        explanation: "كلما زادت طاقة الفوتونات، راح تخترق الجسم أسرع واحتمالية تفاعلها وي الأنسجة راح تقل (decreases)."
+                    },
+                    {
+                        question: "16. What is the main advantage of dual-energy CT?",
+                        translation: "شنو الميزة الأساسية للـ CT ثنائي الطاقة؟",
+                        options: ["A) It reduces scanning time only", "B) It differentiates tissues based on density and composition", "C) It eliminates radiation exposure", "D) It replaces detectors"],
+                        correct: 1,
+                        explanation: "هاي التقنية تكدر تميز الأنسجة بدقة عالية بناءً على كثافتها وتركيبها."
+                    },
+                    {
+                        question: "17. What are Hounsfield Units (HU)?",
+                        translation: "شنو هي وحدات هاونسفيلد (HU)؟",
+                        options: ["A) Units measuring radiation energy", "B) Units describing the degree of X-ray attenuation by tissues", "C) Units measuring detector sensitivity", "D) Units describing X-ray tube voltage"],
+                        correct: 1,
+                        explanation: "هي وحدات رقمية توصف شكد النسيج يوهن ويمتص من الأشعة السينية."
+                    },
+                    {
+                        question: "18. What is the Hounsfield Unit value for water?",
+                        translation: "شكد قيمة وحدة هاونسفيلد (HU) للماء؟",
+                        options: ["A) -1000", "B) 0", "C) 100", "D) 1000"],
+                        correct: 1,
+                        explanation: "قيمة الـ HU للمي هي (صفر)، وهي المرجع الأساسي بالقياسات."
+                    },
+                    {
+                        question: "19. What Hounsfield Unit value corresponds to air?",
+                        translation: "شكد وحدة هاونسفيلد (HU) للهواء؟",
+                        options: ["A) 1000", "B) 500", "C) 0", "D) -1000"],
+                        correct: 3,
+                        explanation: "الهواء ما يمتص إشعاع أبداً وقيمته بالـ HU هي (-1000) ويطلع لونه أسود."
+                    },
+                    {
+                        question: "20. Why does bone have a higher HU value than lung tissue?",
+                        translation: "ليش العظم قيمة الـ HU مالته أعلى من أنسجة الرئة؟",
+                        options: ["A) Because bone absorbs less radiation", "B) Because bone attenuates radiation more strongly", "C) Because bone contains air", "D) Because bone reflects X-rays"],
+                        correct: 1,
+                        explanation: "لأن العظم يوهن ويمتص الإشعاع بشكل أقوى هواي من الرئة."
+                    },
+                    {
+                        question: "21. What is a 'Projection' in CT scanning?",
+                        translation: "شنو يعني كلمة 'Projection' بتصوير الـ CT؟",
+                        options: ["A) the process of moving the table", "B) A shadow of the body's internal structures", "C) The light emitted by the monitors", "D) The total weight of the gantry"],
+                        correct: 1,
+                        explanation: "الإسقاط (Projection) هو الظل اللي يتكون للتراكيب الداخلية للجسم."
+                    },
+                    {
+                        question: "22. To create a comprehensive CT image, the X-ray tube and detectors must:",
+                        translation: "حتى نسوي صورة CT كاملة، أنبوب الأشعة والكواشف لازم شتسوي؟",
+                        options: ["A) Stay stationary (not move)", "B) Rotate around the patient to acquire numerous projections", "C) Only take one single image from the front", "D) Change the room temperature"],
+                        correct: 1,
+                        explanation: "لازم تفتر (Rotate) حول المريض حتى تاخذ لقطات وإسقاطات هواية من كل الجهات."
+                    },
+                    {
+                        question: "23. What happens to X-rays as they traverse through tissues of varying densities?",
+                        translation: "شراح يصير للأشعة السينية من تمر عبر أنسجة كثافتها مختلفة؟",
+                        options: ["A) They all pass through without change", "B) They are either absorbed or scattered", "C) They turn into visible light immediately", "D) They increase in energy"],
+                        correct: 1,
+                        explanation: "قسم منها راح يمتص (absorbed) وقسم راح يتشتت (scattered)."
+                    },
+                    {
+                        question: "24. 'Penetration' can be defined as the inverse of:",
+                        translation: "الاختراق (Penetration) نكدر نعتبره عكس شنو؟",
+                        options: ["A) Rotation", "B) Frequency", "C) Attenuation", "D) Reflection"],
+                        correct: 2,
+                        explanation: "الاختراق هو عكس التوهين (Attenuation)، كلما زاد التوهين قل الاختراق."
+                    },
+                    {
+                        question: "25. When does 'Absorption' occur during a CT scan?",
+                        translation: "شوكت يصير الامتصاص (Absorption) أثناء فحص الـ CT؟",
+                        options: ["A) When photons are deflected from their path", "B) When photons interact with tissue atoms and transfer their energy to them", "C) When the computer restarts", "D) When the patient moves on the table"],
+                        correct: 1,
+                        explanation: "من تتفاعل الفوتونات ويه ذرات النسيج وتنطيها طاقتها، هذا نسميه امتصاص."
+                    },
+                    {
+                        question: "26. If all radiation were to penetrate the body without any attenuation, the image would be:",
+                        translation: "لو كل الأشعة اخترقت الجسم بدون توهين، الصورة راح تطلع شنو؟",
+                        options: ["A) Entirely white", "B) Entirely black", "C) Multicolored", "D) High contrast gray"],
+                        correct: 1,
+                        explanation: "لو كلها اخترقت ووصلت للكاشف بدون ما يصدها شي، الصورة راح تطلع سودة بالكامل (Entirely black)."
+                    },
+                    {
+                        question: "27. Why do bones appear white on CT scans?",
+                        translation: "ليش العظام تطلع بيضة بصور الـ CT؟",
+                        options: ["A) Due to high density, they absorb a lot of radiation", "B) Because they have the same density as air", "C) Because they allow all radiation to penetrate", "D) Because the detector cannot see them"],
+                        correct: 0,
+                        explanation: "لأن كثافة العظم عالية راح يمتص إشعاع هواي ويمنعه يوصل للكاشف، فالصورة تطلع بيضة."
+                    },
+                    {
+                        question: "28. What is the relationship between penetration and the grayscale in an image?",
+                        translation: "شنو العلاقة بين الاختراق والتدرج الرمادي بالصورة؟",
+                        options: ["A) Increased penetration results in a lighter image", "B) Increased penetration corresponds to a darker image", "C) Absorption results in a darker image", "D) There is no relationship"],
+                        correct: 1,
+                        explanation: "زيادة الاختراق (يعني إشعاع أكثر يعبر) تنطي صورة أغمق (darker image)."
+                    },
+                    {
+                        question: "29. X-ray penetration into the human body depends on which of the following factors?",
+                        translation: "اختراق الأشعة لجسم الإنسان يعتمد على يا عوامل؟",
+                        options: ["A) Energy, Thickness, Atomic number, and Mass", "B) Room humidity and table color", "C) The brand of the keyboard", "D) The speed of the radiologist"],
+                        correct: 0,
+                        explanation: "الاختراق يعتمد على طاقة الأشعة، وسمك الجسم، والعدد الذري، والكتلة."
+                    },
+                    {
+                        question: "30. What is the general rule regarding photon energy and penetration?",
+                        translation: "شنو القاعدة العامة بخصوص طاقة الفوتون والاختراق؟",
+                        options: ["A) Low-energy photons are more penetrating", "B) High-energy photons are more penetrating", "C) Energy level does not affect penetration", "D) High-energy photons are always absorbed"],
+                        correct: 1,
+                        explanation: "الفوتونات ذات الطاقة العالية (High-energy) اختراقها يكون أقوى وتكدر تعبر مسافات أطول."
+                    },
+                    {
+                        question: "31. Increasing photon energy generally ________ the probability of interaction (attenuation).",
+                        translation: "زيادة طاقة الفوتون بصورة عامة ________ احتمالية التفاعل والتوهين.",
+                        options: ["A) Increases", "B) Decreases", "C) Doubles", "D) Does not change"],
+                        correct: 1,
+                        explanation: "من تزيد طاقة الفوتون، راح تقل (Decreases) احتمالية تفاعله وي الأنسجة لأن راح يخترق بسرعة."
+                    },
+                    {
+                        question: "32. Which type of X-rays are more prone to absorption and useful for visualizing soft tissues?",
+                        translation: "يا نوع من الأشعة أكثر عرضة للامتصاص ومفيد لتصوير الأنسجة الرخوة؟",
+                        options: ["A) Higher energy X-rays", "B) Lower energy X-rays", "C) Gamma rays only", "D) Visible light"],
+                        correct: 1,
+                        explanation: "الأشعة ذات الطاقة الأقل (Lower energy) تمتصها الأنسجة الرخوة بشكل أفضل فتبين بالصورة."
+                    },
+                    {
+                        question: "33. What is the purpose of 'Dual-energy CT'?",
+                        translation: "شنو الغرض من استخدام الـ CT ثنائي الطاقة؟",
+                        options: ["A) To use two tables at the same time", "B) To differentiate tissues based on both density and composition", "C) To reduce the scanning time to 0.1s", "D) To double the price of the scan"],
+                        correct: 1,
+                        explanation: "الهدف منه هو تمييز الأنسجة بدقة بناءً على كثافتها وتركيبها بنفس الوقت."
+                    },
+                    {
+                        question: "34. The Hounsfield Unit (HU) is defined by:",
+                        translation: "وحدة هاونسفيلد (HU) تتعرف عن طريق شنو؟",
+                        options: ["A) The speed of the gantry rotation", "B) The degree of X-ray attenuation by a tissue", "C) The weight of the patient", "D) The voltage of the generator"],
+                        correct: 1,
+                        explanation: "الـ HU تتحدد بناءً على درجة توهين (attenuation) النسيج للأشعة السينية."
+                    },
+                    {
+                        question: "35. In the HU formula, the attenuation of a material is compared to the attenuation of:",
+                        translation: "بقانون الـ HU، توهين المادة نقارنه وي توهين شنو؟",
+                        options: ["A) Air", "B) Bone", "C) Water", "D) Lead"],
+                        correct: 2,
+                        explanation: "المي (Water) هو المادة القياسية اللي نقارن توهين باقي المواد بيها بالقانون."
+                    },
+                    {
+                        question: "36. According to the formula, what does HU = 1 represent?",
+                        translation: "حسب القانون، الـ HU = 1 شيمثل؟",
+                        options: ["A) 100% attenuation of water", "B) 0.1% of the linear attenuation coefficient of water", "C) Total absorption of X-rays", "D) The density of gold"],
+                        correct: 1,
+                        explanation: "يمثل تغيير بنسبة 0.1% من معامل التوهين الخطي للماء."
+                    },
+                    {
+                        question: "37. Which of the following factors affects the actual value of the HU?",
+                        translation: "يا عامل من هاي العوامل يأثر على القيمة الفعلية للـ HU؟",
+                        options: ["A) Tissue composition, tube voltage, and temperature", "B) The size of the monitor", "C) The patient's height only", "D) The type of lead glass in the window"],
+                        correct: 0,
+                        explanation: "تركيب النسيج، الجهد الكهربائي للأنبوب (kVp)، والحرارة كلش تأثر على قيمة الـ HU اللي تطلع."
+                    },
+                    {
+                        question: "38. Which tissue has a higher HU value, the Lung or the Bone?",
+                        translation: "يا نسيج إله قيمة HU أعلى، الرئة لو العظم؟",
+                        options: ["A) The Lung", "B) The Bone", "C) Both have the same HU value", "D) It depends on the patient's age"],
+                        correct: 1,
+                        explanation: "العظم (Bone) كثافته وتوهينه عالي فـتكون قيمته بالـ HU أكبر بهواي من الرئة."
+                    },
+                    {
+                        question: "39. If a pixel in a CT image has a high Hounsfield number, how will it appear?",
+                        translation: "إذا چان البكسل بالصورة إله رقم هاونسفيلد (HU) عالي، شلون راح يطلع لونه؟",
+                        options: ["A) Darker (Black)", "B) Lighter (White)", "C) Transparent", "D) It will not appear at all"],
+                        correct: 1,
+                        explanation: "الـ HU العالي يعني امتصاص قوي للإشعاع (مثل العظم) وبالتالي راح يطلع أفتح أو أبيض (Lighter)."
+                    },
+                    {
+                        question: "40. When reconstructing an image, each ________ in the image is assigned a specific Hounsfield number.",
+                        translation: "أثناء بناء الصورة، كل ________ بالصورة ينطوه رقم هاونسفيلد محدد.",
+                        options: ["A) Gantry", "B) Pixel", "C) Filter", "D) Collimator"],
+                        correct: 1,
+                        explanation: "كل نقطة أو بكسل (Pixel) بالصورة يترجم لرقم هاونسفيلد يعكس كثافة النسيج."
+                    },
+                    {
+                        question: "41. What is the formula for calculating Hounsfield Units (HU)?",
+                        translation: "شنو هو قانون حساب وحدات هاونسفيلد (HU)؟",
+                        options: ["A) HU_material = (μ_material / μ_water) × 1000", "B) HU_material = ((μ_material − μ_water) / μ_water) × 1000", "C) HU_material = (μ_water − μ_material) × 1000", "D) HU_material = (μ_material + μ_water) / 1000"],
+                        correct: 1,
+                        explanation: "القانون الصحيح هو: ميو المادة ناقص ميو الماء، تقسيم ميو الماء، والناتج نضربه في 1000."
+                    },
+                    {
+                        question: "42. What does a HU value of 1 represent?",
+                        translation: "قيمة HU 1 شتمثل بالضبط؟",
+                        options: ["A) 1% of the linear attenuation coefficient of water", "B) 0.1% of the linear attenuation coefficient of water", "C) 10% of the linear attenuation coefficient of water", "D) 0.01% of the linear attenuation coefficient of water"],
+                        correct: 1,
+                        explanation: "تمثل نسبة 0.1% من معامل التوهين للماء."
+                    },
+                    {
+                        question: "43. How does bone HU compare to lung HU?",
+                        translation: "شلون نقارن رقم الـ HU للعظم ويه الـ HU للرئة؟",
+                        options: ["A) Bone has a smaller HU than lung", "B) Bone has a larger HU than lung", "C) They are equal", "D) It depends on the patient"],
+                        correct: 1,
+                        explanation: "العظم عنده رقم HU أكبر من الرئة بهواي لأن كثافته أعلى."
+                    },
+                    {
+                        question: "44. What does each pixel in a reconstructed CT image have?",
+                        translation: "شنو الشي اللي يملكه كل بكسل بالصورة المقطعية؟",
+                        options: ["A) A color code", "B) A specific Hounsfield number", "C) A temperature value", "D) A contrast level"],
+                        correct: 1,
+                        explanation: "كل بكسل بالصورة يُخصص له رقم هاونسفيلد (Hounsfield number) خاص بي."
+                    }
+           
+                ]
+            },
+            {
+                id: 4,
+                title: "الاسئلة المرشحة",
+                icon: "🏆",
+                questions: [
+   
+  {
+    "question": "Q1: What is the primary function of the operating console in a CT scanner system?",
+    "translation": "شنو الوظيفة الأساسية لوحدة التحكم (الكونسول) بجهاز المفراس (CT)؟",
+    "options": ["A) To maintain room temperature below 20°C", "B) To store patients' belongings", "C) To serve as the master control center for inputting scan factors", "D) To collect data from patient records"],
+    "correct": 2,
+    "explanation": "وحدة التحكم هي المركز الرئيسي اللي نستخدمه حتى ندخل بيه عوامل الفحص ونتحكم بالجهاز."
+  },
+  {
+    "question": "Q2: What is the general relationship between photon energy and interaction probability in medical imaging?",
+    "translation": "شنو العلاقة العامة بين طاقة الفوتون واحتمالية التفاعل بالتصوير الطبي؟",
+    "options": ["A) Energy level has no effect on interaction probability", "B) Lower energy decreases interaction probability", "C) Higher energy decreases interaction probability", "D) Higher energy increases interaction probability"],
+    "correct": 2,
+    "explanation": "كل ما تزيد طاقة الإشعاع (الفوتون)، تقل احتمالية تفاعله ويخترق الجسم أسهل."
+  },
+  {
+    "question": "Q3: Why do bones appear white on an X-ray image?",
+    "translation": "ليش العظام تطلع بيضة بصورة الأشعة؟",
+    "options": ["A) Because bones reflect radiation", "B) Because bones contain high levels of calcium that block radiation", "C) Because bones are naturally white in color", "D) Because the X-ray machine is programmed to show bones in white"],
+    "correct": 1,
+    "explanation": "لأن العظام بيها كالسيوم عالي يمتص ويحجب الأشعة، فما تعبر للفيلم وتطلع بيضة."
+  },
+  {
+    "question": "Q4: Which contrast materials are commonly used in CT scans?",
+    "translation": "شنو هي مواد التباين (الملونة) اللي نستخدمها هواي بفحوصات المفراس؟",
+    "options": ["A) Iodine and barium sulfate", "B) Sodium and potassium", "C) Calcium and magnesium", "D) Iron and copper"],
+    "correct": 0,
+    "explanation": "اليود والباريوم هنّ أكثر المواد الملونة استخداماً حتى نوضح بيها الأعضاء الداخلية بالمفراس."
+  },
+  {
+    "question": "Q5: What is the final step in the CT scanning process?",
+    "translation": "شنو هي الخطوة الأخيرة بعملية فحص المفراس؟",
+    "options": ["A) Rotating the X-ray tube", "B) Moving the patient table", "C) Detecting the X-ray signals", "D) Processing signals into cross-sectional images"],
+    "correct": 3,
+    "explanation": "آخر خطوة هي الكمبيوتر من يعالج الإشارات اللي استلمها ويحولها لصور مقطعية نقدر نشوفها."
+  },
+  {
+    "question": "Q6: What are the main components of an operating console in a CT scanner system?",
+    "translation": "شنو هي الأجزاء الرئيسية لوحدة التحكم بجهاز المفراس؟",
+    "options": ["A) Computer, keyboard, and multiple monitors", "B) Storage unit, scanner, and cables", "C) Detectors, processor, and chamber", "D) X-ray tube and gantry"],
+    "correct": 0,
+    "explanation": "الكونسول يتكون بشكل أساسي من كمبيوتر، كيبورد، وشاشات حتى نشوف بيها الصور وندخل البيانات."
+  },
+  {
+    "question": "Q7: Which type of detector is most commonly used in modern CT scanners?",
+    "translation": "شنو أكثر نوع من الكواشف (Detectors) مستخدم بأجهزة المفراس الحديثة؟",
+    "options": ["A) Xenon gas detector", "B) Solid-state crystal detector", "C) Liquid detector", "D) Film detector"],
+    "correct": 1,
+    "explanation": "كواشف الحالة الصلبة (Solid-state) هي الأكثر استخداماً هسه لأنها كفاءتها عالية جداً."
+  },
+  {
+    "question": "Q8: What is the main purpose of the gantry in a CT scanner?",
+    "translation": "شنو الفائدة الأساسية من الجانتري (القوس) بجهاز المفراس؟",
+    "options": ["A) To collect data from patient records", "B) To process the data into images", "C) To house the X-ray tube and detectors", "D) To input scanning parameters"],
+    "correct": 2,
+    "explanation": "الجانتري هو الجزء الكبير اللي يحتوي بداخله أنبوب الأشعة السينية والكواشف اللي تفتر حول المريض."
+  },
+  {
+    "question": "Q9: Which statement accurately describes CT imaging compared to conventional radiography?",
+    "translation": "يا عبارة توصف المفراس بدقة مقارنةً بالأشعة العادية؟",
+    "options": ["A) CT uses magnetic fields instead of X-rays", "B) CT produces lower quality images than radiography", "C) CT is less effective for diagnostic procedures", "D) CT imparts a relatively higher radiation dose to patients"],
+    "correct": 3,
+    "explanation": "المفراس يعطي المريض جرعة إشعاعية أعلى مقارنة بالأشعة السينية العادية لأنه ياخذ صور مقطعية هواية."
+  },
+  {
+    "question": "Q10: Why do soft tissues require contrast material for clear visibility in CT scans?",
+    "translation": "ليش الأنسجة الرخوة تحتاج مادة ملونة حتى تبين بوضوح بالمفراس؟",
+    "options": ["A) Because soft tissues naturally appear too bright on CT scans", "B) Because X-rays pass through soft tissues too quickly", "C) Because soft tissues don't show clearly on X-ray based imaging without enhancement", "D) Because soft tissues move too much during scanning"],
+    "correct": 2,
+    "explanation": "الأنسجة الرخوة كثافتها متقاربة، فما تبين بوضوح بالأشعة بدون ما نعطيها مادة ملونة تبرزها."
+  },
+  {
+    "question": "Q11: How is the X-ray beam configured when scanning a patient?",
+    "translation": "شلون يكون شكل حزمة الأشعة من نفحص المريض؟",
+    "options": ["A) As a wide dispersed beam", "B) As a narrow-focused beam", "C) As multiple simultaneous beams", "D) As an intermittent pulse"],
+    "correct": 1,
+    "explanation": "الأشعة بالمفراس تكون على شكل حزمة ضيقة ومركزة (مثل المروحة أو المخروط) حتى تركز على المقطع المطلوب."
+  },
+  {
+    "question": "Q12: What is the primary function of the patient table in a CT scanner?",
+    "translation": "شنو وظيفة سدية (طاولة) المريض بجهاز المفراس؟",
+    "options": ["A) It generates X-ray beams", "B) It moves the patient into the gantry", "C) It processes digital signals", "D) It rotates around the patient"],
+    "correct": 1,
+    "explanation": "وظيفة الطاولة هي تحريك المريض وتدخيله جوة الجانتري (الحلقة) أثناء الفحص."
+  },
+  {
+    "question": "Q13: How long does it take for the gantry to complete a 360° rotation?",
+    "translation": "شكد يحتاج الجانتري وقت حتى يكمل فرة كاملة (360 درجة)؟",
+    "options": ["A) 0.1 seconds", "B) 0.2 seconds", "C) 0.3 seconds", "D) 0.4 seconds"],
+    "correct": 2,
+    "explanation": "السرعة بالأجهزة الحديثة سريعة جداً، وتستغرق تقريباً 0.3 ثانية للفره الكاملة."
+  },
+  {
+    "question": "Q14: Why must part of the control room wall be made of Lead Equivalent Glass?",
+    "translation": "ليش لازم يكون اكو جزء من حايط غرفة التحكم مصنوع من زجاج مكافئ للرصاص؟",
+    "options": ["A) To monitor patients in case of emergencies", "B) To reduce energy consumption", "C) To enhance the aesthetic appeal", "D) To maintain room temperature"],
+    "correct": 0,
+    "explanation": "حتى نقدر نراقب المريض بأمان ونشوف حالته خلال الفحص بدون ما نتعرض للإشعاع."
+  },
+  {
+    "question": "Q15: In CT scanning, what does a 'projection' primarily represent?",
+    "translation": "بالمفراس، كلمة 'إسقاط' (Projection) شنو تعني بالضبط؟",
+    "options": ["A) A shadow of internal structures from a specific angle", "B) The density of body tissues", "C) The rotation speed of the scanner", "D) The scatter pattern of X-rays"],
+    "correct": 0,
+    "explanation": "الإسقاط هو ببساطة ظل الأعضاء الداخلية من زاوية معينة لمن تضربها الأشعة."
+  },
+  {
+    "question": "Q16: How do bones appear on CT scans and why?",
+    "translation": "شلون تطلع العظام بصور المفراس وليش؟",
+    "options": ["A) Black, due to low radiation attenuation", "B) Grey, due to moderate radiation attenuation", "C) Transparent, due to no radiation attenuation", "D) White, due to high radiation attenuation"],
+    "correct": 3,
+    "explanation": "بيضة، لأن العظام كثافتها عالية وتمتص (توهّن) نسبة كبيرة من الإشعاع."
+  },
+  {
+    "question": "Q17: What happens to the X-rays after they pass through the patient's body?",
+    "translation": "شراح يصير للأشعة السينية بعد ما تعبر جسم المريض؟",
+    "options": ["A) They are detected on the opposite side", "B) They are recycled back to the generator", "C) They are converted to heat energy", "D) They dissipate into the air"],
+    "correct": 0,
+    "explanation": "من تعبر الجسم، الكواشف (Detectors) اللي صايرة بالجهة المقابلة راح تلتقطها وتسجلها."
+  },
+  {
+    "question": "Q18: What is the Hounsfield Unit (HU) value for water at room temperature?",
+    "translation": "شنو هي قيمة وحدة هاونسفيلد (HU) للماء بدرجة حرارة الغرفة؟",
+    "options": ["A) -1000", "B) 1", "C) 0", "D) 100"],
+    "correct": 2,
+    "explanation": "الماء يعتبر هو المقياس الأساسي بوحدات هاونسفيلد، وقيمته دائماً صفر."
+  },
+  {
+    "question": "Q19: Which type of X-rays are more suitable for bone imaging?",
+    "translation": "يا نوع من الأشعة السينية أنسب حتى نصور بيها العظام؟",
+    "options": ["A) Lower energy X-rays", "B) Medium energy X-rays", "C) Higher energy X-rays", "D) X-ray energy has no impact on bone imaging"],
+    "correct": 2,
+    "explanation": "الأشعة ذات الطاقة العالية هي الأنسب حتى تقدر تخترق الكثافة العالية للعظام وتوضحها."
+  },
+  {
+    "question": "Q20: What enables medical professionals to distinguish between different tissues in X-ray images?",
+    "translation": "شنو اللي يخلي الأطباء يقدرون يميزون بين الأنسجة المختلفة بصورة الأشعة؟",
+    "options": ["A) Tissue color", "B) Different radiation attenuation properties", "C) Tissue temperature", "D) Tissue elasticity"],
+    "correct": 1,
+    "explanation": "لأن كل نسيج يمتص (يوهّن) الأشعة بدرجة مختلفة حسب كثافته، وهذا اللي يسوي التباين بالصورة."
+  },
+  {
+    "question": "Q21: Which of these is NOT a factor affecting X-ray penetration into the human body?",
+    "translation": "يا هو من هالعوامل ما يأثر على اختراق الأشعة لجسم الإنسان؟",
+    "options": ["A) X-ray energy", "B) Tissue temperature", "C) Atomic number", "D) Thickness"],
+    "correct": 1,
+    "explanation": "درجة حرارة النسيج مالها أي علاقة باختراق الأشعة، البقية كلهم يأثرون."
+  },
+  {
+    "question": "Q22: Which statement about traditional X-ray imaging is correct?",
+    "translation": "يا عبارة صحيحة بخصوص تصوير الأشعة التقليدية؟",
+    "options": ["A) It shows soft tissues in white on the image", "B) It cannot detect joint space narrowing", "C) It requires multiple angles like a CT scan", "D) It shows soft tissues in gray or black on the image"],
+    "correct": 3,
+    "explanation": "بالأشعة العادية، الأنسجة الرخوة لأنها ما تمتص أشعة هواية تطلع باللون الرمادي أو الأسود."
+  },
+  {
+    "question": "Q23: When examining the digestive tract with contrast material, which delivery method is most appropriate?",
+    "translation": "من نريد نفحص الجهاز الهضمي بمادة ملونة، يا طريقة هي الأنسب لإعطائها؟",
+    "options": ["A) Intravenous injection", "B) Oral administration", "C) Enema", "D) Topical application"],
+    "correct": 1,
+    "explanation": "عن طريق الفم (الشرب) هي الطريقة الأساسية حتى المادة الملونة تمر وتوضح المعدة والأمعاء."
+  },
+  {
+    "question": "Q24: What is the primary function of the focusing cup in an X-ray tube?",
+    "translation": "شنو الوظيفة الأساسية لكوب التركيز (Focusing cup) بأنبوب الأشعة؟",
+    "options": ["A) To maintain vacuum within the tube", "B) To direct and concentrate the electron beam", "C) To cool the anode during operation", "D) To filter low-energy radiation"],
+    "correct": 1,
+    "explanation": "وظيفته يجمع ويركز حزمة الإلكترونات حتى تضرب الهدف بدقة وما تتشتت."
+  },
+  {
+    "question": "Q25: Which component is responsible for converting radiation into electrical signals?",
+    "translation": "يا جزء مسؤول عن تحويل الإشعاع إلى إشارات كهربائية؟",
+    "options": ["A) The detector", "B) The X-ray tube", "C) The collimator", "D) The computer processor"],
+    "correct": 0,
+    "explanation": "الكاشف (Detector) هو اللي يستلم الأشعة ويحولها لكهرباء حتى الكمبيوتر يقدر يقراها."
+  },
+  {
+    "question": "Q26: What is the primary function of the computer in the CT system?",
+    "translation": "شنو وظيفة الكمبيوتر الأساسية بنظام المفراس؟",
+    "options": ["A) To collect and analyze detector input", "B) To manage patient appointments", "C) To control room temperature", "D) To operate the waiting room systems"],
+    "correct": 0,
+    "explanation": "الكمبيوتر ياخذ البيانات من الكواشف، يحللها، ويحولها إلى الصورة اللي نشوفها."
+  },
+  {
+    "question": "Q27: In X-ray imaging, what causes a black appearance on the film?",
+    "translation": "بالأشعة السينية، شنو اللي يخلي الفيلم يطلع أسود؟",
+    "options": ["A) Radiation penetration", "B) Partial absorption of radiation", "C) Complete absorption of radiation", "D) Radiation scattering"],
+    "correct": 0,
+    "explanation": "من الأشعة تخترق الجسم بالكامل (مثل الهواء بالرئة) وماكو شي يمتصها، تضرب الفيلم وتسودّه."
+  },
+  {
+    "question": "Q28: Why are lower energy X-rays particularly useful for soft tissue imaging?",
+    "translation": "ليش الأشعة ذات الطاقة المنخفضة مفيدة كلش بتصوير الأنسجة الرخوة؟",
+    "options": ["A) They penetrate deeper into soft tissues", "B) They are more likely to be absorbed, showing subtle density differences", "C) They scatter more effectively in soft tissues", "D) They produce fewer artifacts in soft tissue imaging"],
+    "correct": 1,
+    "explanation": "لأنها تُمتص بسهولة أكبر بالأنسجة الرخوة، وهذا الشي يبرز الاختلافات البسيطة بالكثافة ويوضحها."
+  },
+  {
+    "question": "Q29: How are CT images generated?",
+    "translation": "شلون تتولد صور المفراس؟",
+    "options": ["A) Through magnetic field manipulation", "B) Using sound wave reflections", "C) By direct tissue sampling", "D) Through computer-processed X-rays around a single axis of rotation"],
+    "correct": 3,
+    "explanation": "تتولد من خلال دوران أنبوب الأشعة حول المريض وأخذ قراءات هواية، والكمبيوتر يعالجها ويطلع الصورة."
+  },
+  {
+    "question": "Q30: What would an X-ray image look like if all radiation penetrated through tissue without any attenuation?",
+    "translation": "شلون راح يكون شكل صورة الأشعة إذا كل الإشعاع اخترق الجسم بدون أي توهين؟",
+    "options": ["A) Completely white", "B) Various shades of grey", "C) Completely black", "D) No image would form"],
+    "correct": 2,
+    "explanation": "إذا كل الأشعة اخترقت ووصلت للفيلم بدون ما يمتصها الجسم، الفيلم راح يحترق ويصير أسود تماماً."
+  },
+  {
+    "question": "Q31: Which imaging modality produces a grayscale image that shows varying degrees of radiation absorption?",
+    "translation": "يا تقنية تصوير تطلع صورة بتدرج رمادي تبين درجات امتصاص الإشعاع المختلفة؟",
+    "options": ["A) Ultrasound", "B) CT scan", "C) MRI", "D) PET scan"],
+    "correct": 1,
+    "explanation": "المفراس (CT) يعتمد على الأشعة السينية، ويطلع الصورة بتدرج رمادي حسب شكد النسيج امتص إشعاع."
+  },
+  {
+    "question": "Q32: What is the primary component of a CT scanner that emits X-rays?",
+    "translation": "شنو هو الجزء الأساسي بجهاز المفراس اللي يطلّع (يُصدر) الأشعة السينية؟",
+    "options": ["A) Detector array", "B) X-ray tube", "C) Collimator", "D) Projection screen"],
+    "correct": 1,
+    "explanation": "أنبوب الأشعة السينية (X-ray tube) هو المصدر الأساسي لتوليد الإشعاع بالجهاز."
+  },
+  {
+    "question": "Q33: What environmental conditions must be maintained in the computer room?",
+    "translation": "شنو هي الظروف البيئية اللي لازم نحافظ عليها بغرفة الكمبيوتر (مال الجهاز)؟",
+    "options": ["A) Temperature above 30°C and humidity below 20%", "B) Temperature below 20°C and humidity below 30%", "C) Temperature above 20°C and humidity above 30%", "D) No specific environmental requirements"],
+    "correct": 1,
+    "explanation": "لازم الغرفة تكون باردة (أقل من 20 مئوية) ورطوبتها قليلة حتى الأجهزة متحمى وتخرب."
+  },
+  {
+    "question": "Q34: Which type of detector uses ionization to create electrical signals?",
+    "translation": "يا نوع من الكواشف يستخدم عملية التأين حتى يسوي إشارات كهربائية؟",
+    "options": ["A) Xenon gas detector", "B) Solid-state crystal detector", "C) Silicon detector", "D) Phosphor detector"],
+    "correct": 0,
+    "explanation": "كاشف غاز الزينون يعتمد على تأين الغاز من تضربه الأشعة حتى يولد إشارة كهربائية."
+  },
+  {
+    "question": "Q35: What is the primary function of computed tomography in medical imaging?",
+    "translation": "شنو هي الوظيفة الأساسية للمفراس بالتصوير الطبي؟",
+    "options": ["A) To produce only two-dimensional images of bones", "B) To generate ultrasound waves for tissue examination", "C) To create three-dimensional images from a series of X-ray slices", "D) To measure magnetic resonance in body tissues"],
+    "correct": 2,
+    "explanation": "الوظيفة الأساسية هي تكوين صور مقطعية وثلاثية الأبعاد من خلال تجميع سلسلة من صور الأشعة."
+  },
+  {
+    "question": "Q36: What is the primary purpose of using contrast material in CT scans?",
+    "translation": "شنو الغرض الأساسي من استخدام المادة الملونة بفحوصات المفراس؟",
+    "options": ["A) To highlight soft tissues, blood vessels, and organs", "B) To reduce radiation exposure", "C) To speed up the scanning process", "D) To decrease image resolution"],
+    "correct": 0,
+    "explanation": "المادة الملونة نستخدمها حتى نوضح ونبرز الأنسجة الرخوة والأوعية الدموية اللي ما تبين بوضوح بدونها."
+  },
+  {
+    "question": "Q37: Which statement best describes the relationship between filtration and patient radiation dose?",
+    "translation": "يا عبارة توصف بشكل أفضل العلاقة بين الفلترة وجرعة الإشعاع اللي ياخذها المريض؟",
+    "options": ["A) Filtration increases patient dose by amplifying radiation", "B) Filtration has no effect on patient radiation dose", "C) Filtration decreases image quality while increasing patient dose", "D) Filtration reduces patient dose by removing non-contributory radiation"],
+    "correct": 3,
+    "explanation": "الفلاتر تقلل جرعة الإشعاع للمريض لأنها تشيل الأشعة الضعيفة اللي ما تفيد بتكوين الصورة بس تضر المريض."
+  },
+  {
+    "question": "Q38: What happens to radiation as it passes through the patient during a CT scan?",
+    "translation": "شنو يصير للإشعاع من يعبر جسم المريض بفحص المفراس؟",
+    "options": ["A) It is completely absorbed", "B) It is amplified", "C) It experiences attenuation through absorption and scatter", "D) It remains unchanged"],
+    "correct": 2,
+    "explanation": "الإشعاع يصير بيه توهين (يضعف)، جزء منه يمتصه الجسم وجزء يتشتت."
+  },
+  {
+    "question": "Q39: During the CT scanning process, how do X-rays interact with body tissues?",
+    "translation": "أثناء فحص المفراس، شلون تتفاعل الأشعة وي أنسجة الجسم؟",
+    "options": ["A) They are only absorbed", "B) They are only scattered", "C) They are both absorbed and scattered", "D) They pass through without interaction"],
+    "correct": 2,
+    "explanation": "الأشعة من تدخل الجسم قسم منها يمتصه النسيج وقسم ثاني يتشتت، وهذا اللي يسوي التوهين."
+  },
+  {
+    "question": "Q40: What is the relationship between penetration and attenuation in radiation?",
+    "translation": "شنو العلاقة بين الاختراق والتوهين بالإشعاع؟",
+    "options": ["A) They are directly proportional", "B) They are inversely proportional", "C) They have no relationship", "D) They are exponentially related"],
+    "correct": 1,
+    "explanation": "العلاقة عكسية، كل ما زاد اختراق الأشعة، معناها قل التوهين (الامتصاص)، والعكس صحيح."
+  },
+  {
+    "question": "Q41: What unique capability does CT scanning offer compared to traditional X-rays?",
+    "translation": "شنو الميزة الفريدة اللي يقدمها المفراس مقارنة بالأشعة العادية؟",
+    "options": ["A) It can only examine soft tissues", "B) It provides 180-degree views of body structures", "C) It reconstructs 3D images from multiple X-ray slices", "D) It uses magnetic fields and radio waves"],
+    "correct": 2,
+    "explanation": "المفراس يكدر يجمع شرائح هواية من الأشعة ويبني منها صورة مجسمة (ثلاثية الأبعاد)، وهذا الشي مستحيل بالأشعة العادية."
+  },
+  {
+    "question": "Q42: Which of the following organs can be effectively screened for cancer using CT scans?",
+    "translation": "يا أعضاء نقدر نفحصها ونكشف بيها عن السرطان بفعالية باستخدام المفراس؟",
+    "options": ["A) Tongue, liver, kidney, ovary, and pancreas", "B) Liver and kidneys only", "C) Lungs, liver, kidneys, ovary, and pancreas", "D) Heart, tongue, and lungs"],
+    "correct": 2,
+    "explanation": "المفراس كلش دقيق وفعال باكتشاف الأورام بالرئتين، الكبد، الكلى، المبيض، والبنكرياس."
+  },
+  {
+    "question": "Q43: How do bones appear on CT scans and why?",
+    "translation": "شلون تطلع العظام بصور المفراس وليش؟",
+    "options": ["A) Black due to low radiation absorption", "B) White due to high radiation absorption", "C) Gray due to medium radiation absorption", "D) Invisible due to no radiation interaction"],
+    "correct": 1,
+    "explanation": "تطلع بيضة لأنها كثيفة وتمتص كمية كبيرة من الإشعاع، فما تخلي الأشعة توصل للكاشف بقوة."
+  },
+  {
+    "question": "Q44: How does CT scanning generate more image clarity?",
+    "translation": "شلون المفراس يطلّع صورة أكثر وضوحاً؟",
+    "options": ["A) By taking only a few static X-ray images", "B) By using magnetic resonance to visualize body tissues", "C) By using computer-processed rotating X-ray beams", "D) By shortening the exposure radiation only"],
+    "correct": 2,
+    "explanation": "عن طريق دوران حزمة الأشعة حول المريض وأخذ زوايا مختلفة، والكمبيوتر يعالجها ويطلع تفاصيل دقيقة."
+  },
+  {
+    "question": "Q45: During the CT scan process, how do X-rays interact with body tissue?",
+    "translation": "خلال فحص المفراس، شلون تتفاعل الأشعة السينية وي أنسجة الجسم؟",
+    "options": ["A) They are only absorbed", "B) They are only scattered", "C) They are both absorbed and scattered", "D) They reflect off tissues"],
+    "correct": 2,
+    "explanation": "الأشعة تتعرض لعمليتين مع بعض: الامتصاص من قبل الأنسجة، والتشتت بداخل الجسم."
+  },
+  {
+    "question": "Q46: Why do bones appear white in X-ray images?",
+    "translation": "ليش العظام تطلع بيضة بصور الأشعة؟",
+    "options": ["A) They absorb most radiation due to high density", "B) They have low density", "C) They reflect radiation", "D) They scatter radiation completely"],
+    "correct": 0,
+    "explanation": "لأن كثافتها العالية تخليها تمتص أغلب الإشعاع، فيبقى مكانها بالفيلم أو الصورة أبيض."
+  },
+  {
+    "question": "Q47: Which imaging technique would be most appropriate for detecting subtle bone fractures?",
+    "translation": "يا تقنية تصوير تكون الأنسب حتى نكشف الكسور الدقيقة (الناعمة) بالعظام؟",
+    "options": ["A) CT scan imaging", "B) Either X-ray or CT scan would be equally effective", "C) X-ray imaging only", "D) Neither imaging technique is suitable for fractures"],
+    "correct": 0,
+    "explanation": "المفراس (CT) هو الأدق لأن ياخذ مقاطع رقيقة ويقدر يشوف الكسور اللي متبيّن بالأشعة العادية."
+  },
+  {
+    "question": "Q48: Which component of an X-ray tube serves as the electron source?",
+    "translation": "يا جزء بأنبوب الأشعة يعتبر هو المصدر اللي تطلع منه الإلكترونات؟",
+    "options": ["A) The glass envelope", "B) The focusing cup", "C) The heated tungsten filament", "D) The anode target"],
+    "correct": 2,
+    "explanation": "خيط التنغستن الساخن (بالكاثود) هو اللي يسخن ويحرر الإلكترونات اللي نحتاجها لتوليد الأشعة."
+  },
+  {
+    "question": "Q49: Why do soft tissues require contrast material for clear visibility in CT scans?",
+    "translation": "ليش الأنسجة الرخوة تحتاج مادة ملونة حتى تبين واضحة بالمفراس؟",
+    "options": ["A) Because soft tissues naturally appear too bright on CT scans", "B) Because X-rays pass through soft tissues too quickly", "C) Because soft tissues move too much during scanning", "D) Because soft tissues don't show clearly on X-ray based imaging without enhancement"],
+    "correct": 3,
+    "explanation": "لأن كثافة الأنسجة الرخوة متقاربة فماكو تباين بيناتها بصورة الأشعة، المادة الملونة تحل هاي المشكلة وتبرزها."
+  },
+  {
+    "question": "Q50: What is a disadvantage of xenon gas detectors?",
+    "translation": "شنو هو العيب بكواشف غاز الزينون؟",
+    "options": ["A) They produce poor quality images", "B) They require constant pressurization", "C) They are too expensive", "D) They emit too much radiation"],
+    "correct": 1,
+    "explanation": "عيبها الرئيسي إنها تحتاج ضغط عالي ومستمر للغاز حتى تشتغل بكفاءة، وهذا يخلي تصميمها معقد."
+  },
+  {
+    "question": "Q51: In CT scanning, what does a 'projection' primarily represent?",
+    "translation": "بالمفراس، شنو يعني مصطلح 'الإسقاط' (Projection)؟",
+    "options": ["A) The rotation speed of the scanner", "B) The density of body tissues", "C) A shadow of internal structures from a specific angle", "D) The scatter pattern of X-rays"],
+    "correct": 2,
+    "explanation": "الإسقاط هو الظل اللي يتكون للأعضاء الداخلية من تمر بيها الأشعة من زاوية معينة."
+  },
+  {
+    "question": "Q52: In X-ray imaging, what causes a black appearance on the film?",
+    "translation": "بتصوير الأشعة، شنو اللي يخلي الفيلم يطلع أسود؟",
+    "options": ["A) Complete absorption of radiation", "B) Partial absorption of radiation", "C) Radiation penetration", "D) Radiation scattering"],
+    "correct": 2,
+    "explanation": "اختراق الإشعاع الكامل للجسم (بدون ما يمتص) يخلي الأشعة تضرب الفيلم وتسودّه، مثل ما يصير وي الهواء بالرئة."
+  },
+  {
+    "question": "Q53: What happens to the X-rays after they pass through the patient's body?",
+    "translation": "شنو يصير للأشعة السينية بعد ما تمر بجسم المريض؟",
+    "options": ["A) They are converted to heat energy", "B) They are detected on the opposite side", "C) They are recycled back to the generator", "D) They dissipate into the air"],
+    "correct": 1,
+    "explanation": "من تعبر الجسم، راح تستقبلها الكواشف (Detectors) الموجودة بالجهة المقابلة للأنبوب."
+  },
+  {
+    "question": "Q54: Which component of the CT scanner contains the rotating mechanism that holds the X-ray tube?",
+    "translation": "يا جزء بجهاز المفراس يحتوي على الآلية الدوارة اللي تلزم أنبوب الأشعة؟",
+    "options": ["A) The gantry", "B) The patient table", "C) The detector array", "D) The computer processor"],
+    "correct": 0,
+    "explanation": "الجانتري (الحلقة الكبيرة) هو اللي بداخله كل الأجزاء الدوارة مثل أنبوب الأشعة والكواشف."
+  },
+  {
+    "question": "Q55: What happens during radiation absorption in tissue?",
+    "translation": "شنو يصير من الأنسجة تمتص الإشعاع؟",
+    "options": ["A) Photons are deflected without energy transfer", "B) Photons pass through without interaction", "C) Photons transfer their energy to tissue atoms", "D) Photons increase their energy level"],
+    "correct": 2,
+    "explanation": "عملية الامتصاص معناها إن الفوتونات (الإشعاع) تنطي طاقتها لذرات النسيج وتتوقف."
+  },
+  {
+    "question": "Q56: Which statement best describes the relationship between radiation attenuation and Hounsfield Units?",
+    "translation": "يا عبارة توصف أحسن شي العلاقة بين توهين الإشعاع ووحدات هاونسفيلد (HU)؟",
+    "options": ["A) Higher HU values indicate higher radiation attenuation", "B) Lower HU values indicate higher radiation attenuation", "C) There is no relationship between HU and radiation attenuation", "D) HU values are independent of tissue density"],
+    "correct": 0,
+    "explanation": "كلما زاد التوهين (امتصاص النسيج للإشعاع مثل العظم)، زادت قيمة وحدة هاونسفيلد للنسيج."
+  },
+  {
+    "question": "Q57: CT Scan stands for:",
+    "translation": "اختصار CT Scan يعني شنو؟",
+    "options": ["A) Computed Tomography Scan", "B) Colored Topography Scan", "C) Computerized Topography Scan"],
+    "correct": 0,
+    "explanation": "الـ CT هو اختصار لـ Computed Tomography، ويعني التصوير المقطعي المحوسب."
+  },
+  {
+    "question": "Q58: Why is contrast used in CT scan?",
+    "translation": "ليش نستخدم المادة الملونة (التباين) بالمفراس؟",
+    "options": ["A) To suppress particular tissues", "B) To reduce bone interference", "C) To show soft tissue clearly"],
+    "correct": 2,
+    "explanation": "نستخدم المادة الملونة حتى نوضح ونميز الأنسجة الرخوة والأوعية اللي ما تبين بدونها."
+  },
+  {
+    "question": "Q59: The function of the generator in the CT is:",
+    "translation": "شنو وظيفة المولد الكهربائي (الجنريتر) بالمفراس؟",
+    "options": ["A) To produce X-ray beam", "B) To reduce the scatter radiation", "C) To produce electrical energy"],
+    "correct": 2,
+    "explanation": "وظيفة المولد هي تحويل وإنتاج الطاقة الكهربائية (الفولتية العالية) اللي يحتاجها أنبوب الأشعة."
+  },
+  {
+    "question": "Q60: The amount of ______ determines the gradient gray in the image:",
+    "translation": "كمية ______ هي اللي تحدد التدرج الرمادي بالصورة:",
+    "options": ["A) Scattered rays", "B) Absorbed rays", "C) Penetrating rays"],
+    "correct": 2,
+    "explanation": "الأشعة المخترقة (اللي تعبر الجسم وتوصل للكاشف) هي اللي تحدد شكد راح يكون التدرج الرمادي بكل بكسل."
+  },
+  {
+    "question": "Q61: The image reconstruction refers to:",
+    "translation": "مصطلح 'إعادة بناء الصورة' يشير لشنو؟",
+    "options": ["A) A mathematical algorithm", "B) Speed of image acquisition", "C) A data set representing X-ray attenuation in the patient"],
+    "correct": 2,
+    "explanation": "إعادة بناء الصورة هي معالجة مجموعة البيانات اللي تمثل شكد الأشعة صار بيها توهين بكل جزء من المريض."
+  },
+  {
+    "question": "Q62: The brightness of the image is adjusted via:",
+    "translation": "سطوع الصورة نقدر نعدله من خلال:",
+    "options": ["A) Window level", "B) Window width", "C) Both A and B"],
+    "correct": 2,
+    "explanation": "الـ Window level يتحكم بالسطوع، والـ Window width يتحكم بالتباين، واثنينهم نستخدمهم لتعديل الصورة للمشاهدة."
+  },
+  {
+    "question": "Q63: The data acquisition mode in the ______ generation is (rotate-stationary):",
+    "translation": "نمط أخذ البيانات بيا جيل يكون (دوران-ثابت)؟",
+    "options": ["A) 1st generation", "B) 3rd generation", "C) 4th generation"],
+    "correct": 2,
+    "explanation": "بالجيل الرابع، الكواشف تكون ثابتة على طول الحلقة، بس الأنبوب هو اللي يفتر (Rotate-Stationary). *ملاحظة: حسب الخيارات الأصح هو الرابع، بس بالاجابة القياسية مرات يقصدون غير شي. بناءً ع السياق العلمي الرابع هو Rotate-Stationary.*",
+    "note": "Correction based on CT generation history: 4th gen is Rotate-Stationary. If the source had 1st gen as correct, 1st gen is Translate-Rotate."
+  },
+  {
+    "question": "Q64: What is the primary function of the generator in the CT scanner?",
+    "translation": "شنو الوظيفة الأساسية للمولد بجهاز المفراس؟",
+    "options": ["A) To produce electrical energy and send it to the X-ray tube", "B) To rotate around the patient", "C) To detect scattered radiation", "D) To store patient data"],
+    "correct": 0,
+    "explanation": "المولد يصنع الطاقة الكهربائية العالية ويدزها لأنبوب الأشعة حتى يقدر يولد الإشعاع."
+  },
+  {
+    "question": "Q65: What are the main components of the X-ray tube?",
+    "translation": "شنو هي الأجزاء الرئيسية لأنبوب الأشعة السينية؟",
+    "options": ["A) Anode, Cathode, Glass Envelope, and High Voltage Power Supply", "B) Generator, Filter, Collimator, and Detector", "C) Gantry, Table, Control Room, and Monitor", "D) Computer, Keyboard, Scanner, and Printer"],
+    "correct": 0,
+    "explanation": "الأنبوب يتكون من قطب موجب (أنود)، قطب سالب (كاثود)، غلاف زجاجي يحافظ على الفراغ، ويحتاج فولتية عالية."
+  },
+  {
+    "question": "Q66: What does the scanner gantry contain?",
+    "translation": "شنو اللي موجود بداخل جانتري المفراس؟",
+    "options": ["A) The rotating portion holding the X-ray tube generator and detector array", "B) The patient's medical records only", "C) The contrast material injection system", "D) The computer and monitors only"],
+    "correct": 0,
+    "explanation": "الجانتري يحتوي على الجزء الدوار اللي شايل أنبوب الأشعة ومجموعة الكواشف."
+  },
+  {
+    "question": "Q67: What is the Hounsfield Unit (HU) value for air?",
+    "translation": "شنو هي قيمة وحدة هاونسفيلد (HU) للهواء؟",
+    "options": ["A) 0", "B) +1000", "C) -1000", "D) +500"],
+    "correct": 2,
+    "explanation": "الهواء أقل كثافة من كل شي بالجسم، فقيمته هي الحد الأدنى وتساوي -1000."
+  },
+  {
+    "question": "Q68: Which contrast delivery method is used when the target of the scan is the intestines?",
+    "translation": "يا طريقة إعطاء مادة ملونة نستخدمها إذا كان الهدف نفحص الأمعاء؟",
+    "options": ["A) Injection into a vein", "B) Oral administration", "C) Enema (inserted in the rectum)", "D) Inhalation"],
+    "correct": 2,
+    "explanation": "الحقنة الشرجية (Enema) نستخدمها حتى نترس الأمعاء الغليظة بالمادة الملونة وتوضح بالفحص."
+  },
+  {
+    "question": "Q69: What does the collimator control in terms of CT image characteristics?",
+    "translation": "الكوليميتر (المُجمِّع) شنو اللي يتحكم بيه بخصائص صورة المفراس؟",
+    "options": ["A) The thickness of the CT image by expanding or reducing the radiation field", "B) The brightness of the image on the monitor", "C) The rotation speed of the gantry", "D) The amount of contrast material injected"],
+    "correct": 0,
+    "explanation": "الكوليميتر هو اللي يحدد سمك الشريحة (الصورة) من خلال تضييق أو توسيع حزمة الإشعاع."
+  }
+                ]
+            }
+        ];
+
+        let currentLecture = null;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let showTranslation = false;
+        let isDarkMode = false;
+
+        function preventCopyPaste() {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('copy', e => e.preventDefault());
+            document.addEventListener('cut', e => e.preventDefault());
+            document.addEventListener('paste', e => e.preventDefault());
+            document.addEventListener('selectstart', e => e.preventDefault());
+            
+            document.addEventListener('keydown', e => {
+                if (
+                    (e.ctrlKey || e.metaKey) && 
+                    ['c', 'x', 'a', 'u', 's'].includes(e.key.toLowerCase())
+                ) {
+                    e.preventDefault();
+                }
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        function renderLectures() {
+            const grid = document.getElementById('lectureGrid');
+            grid.innerHTML = lectures.map(lecture => `
+                <div class="lecture-card" onclick="startQuiz(${lecture.id})">
+                    <div class="lecture-icon">${lecture.icon}</div>
+                    <div class="lecture-number">المحاضرة ${lecture.id}</div>
+                    <div class="lecture-title">${lecture.title}</div>
+                </div>
+            `).join('');
+        }
+
+        function startQuiz(lectureId) {
+            currentLecture = lectures.find(l => l.id === lectureId);
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            
+            document.getElementById('lectureSelection').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+            document.getElementById('quizTitle').textContent = currentLecture.title;
+            
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const question = currentLecture.questions[currentQuestionIndex];
+            const questionSection = document.getElementById('questionSection');
+            
+            const progress = ((currentQuestionIndex + 1) / currentLecture.questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('questionCounter').textContent = 
+                `السؤال ${currentQuestionIndex + 1} من ${currentLecture.questions.length}`;
+            
+            showTranslation = false;
+            
+            questionSection.innerHTML = `
+                <div class="question-header">
+                    <div class="question-text">${question.question}</div>
+                    <div style="display:flex;">
+                        <button class="speak-btn" onclick="speakQuestion()">🔊 استماع</button>
+                        <button class="translate-btn" onclick="toggleTranslation()">🔤 ترجمة</button>
+                    </div>
+                </div>
+                <div id="translationContainer"></div>
+                <div class="options-container">
+                    ${question.options.map((option, index) => `
+                        <button class="option-btn" onclick="selectAnswer(${index})">${option}</button>
+                    `).join('')}
+                </div>
+                <div id="feedbackContainer"></div>
+            `;
+        }
+
+        function toggleTranslation() {
+            showTranslation = !showTranslation;
+            const container = document.getElementById('translationContainer');
+            const question = currentLecture.questions[currentQuestionIndex];
+            
+            if (showTranslation) {
+                container.innerHTML = `<div class="translation">${question.translation}</div>`;
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = currentLecture.questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedbackContainer = document.getElementById('feedbackContainer');
+            
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === question.correct) {
+                    btn.classList.add('correct');
+                }
+                if (index === selectedIndex && index !== question.correct) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            const isCorrect = selectedIndex === question.correct;
+            
+            if (isCorrect) {
+                score++;
+                playSound('correct');
+                setTimeout(() => {
+                    nextQuestion();
+                }, 800);
+            } else {
+                playSound('error');
+                feedbackContainer.innerHTML = `
+                    <div class="feedback-box error">
+                        ${question.explanation}
+                    </div>
+                    <button class="next-btn" onclick="nextQuestion()">التالي</button>
+                `;
+            }
+            
+            userAnswers.push({
+                question: question.question,
+                userAnswer: question.options[selectedIndex],
+                correctAnswer: question.options[question.correct],
+                isCorrect: isCorrect
+            });
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < currentLecture.questions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function animateValue(element, start, end, duration) {
+            const range = end - start;
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const current = Math.floor(start + range * easeOutQuart);
+                
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        function showResults() {
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+            
+            const totalQuestions = currentLecture.questions.length;
+            const wrongAnswers = totalQuestions - score;
+            const percentage = (score / totalQuestions) * 100;
+            
+            const scoreElement = document.getElementById('finalScore');
+            const messageElement = document.getElementById('resultsMessage');
+            const badgeElement = document.getElementById('performanceBadge');
+            const progressRing = document.getElementById('progressRing');
+            
+            animateValue(document.getElementById('correctAnswers'), 0, score, 1500);
+            animateValue(document.getElementById('wrongAnswers'), 0, wrongAnswers, 1500);
+            animateValue(document.getElementById('totalQuestions'), 0, totalQuestions, 1500);
+            
+            let currentPercentage = 0;
+            const percentageInterval = setInterval(() => {
+                currentPercentage += 1;
+                scoreElement.textContent = `${currentPercentage}%`;
+                
+                if (currentPercentage >= percentage) {
+                    clearInterval(percentageInterval);
+                    scoreElement.textContent = `${percentage.toFixed(0)}%`;
+                }
+            }, 20);
+            
+            const circumference = 2 * Math.PI * 85;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            setTimeout(() => {
+                progressRing.style.strokeDashoffset = offset;
+            }, 100);
+            
+            if (percentage < 50) {
+                scoreElement.className = 'results-score fail';
+                progressRing.className = 'progress-ring fail';
+                badgeElement.className = 'performance-badge badge-fail';
+                badgeElement.textContent = '❌ راسب';
+                messageElement.textContent = 'حاول مرة أخرى! التعلم يحتاج للممارسة المستمرة 💪';
+            } else if (percentage < 90) {
+                scoreElement.className = 'results-score pass';
+                progressRing.className = 'progress-ring pass';
+                badgeElement.className = 'performance-badge badge-pass';
+                badgeElement.textContent = '✅ ناجح';
+                messageElement.textContent = 'أحسنت! أداء جيد، واصل التقدم 👏';
+            } else {
+                scoreElement.className = 'results-score excellent';
+                progressRing.className = 'progress-ring excellent';
+                badgeElement.className = 'performance-badge badge-excellent';
+                badgeElement.textContent = '🌟 متفوق';
+                messageElement.textContent = 'ممتاز! أداء رائع ومتميز 🌟';
+                createConfetti();
+            }
+        }
+
+        function reviewQuiz() {
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.classList.toggle('hidden');
+            
+            if (!reviewContainer.classList.contains('hidden')) {
+                reviewContainer.innerHTML = userAnswers.map((answer, index) => `
+                    <div class="review-question">
+                        <div class="review-question-text">Question ${index + 1}: ${answer.question}</div>
+                        ${!answer.isCorrect ? `<div class="review-answer user">Your answer: ${answer.userAnswer}</div>` : ''}
+                        <div class="review-answer correct">Correct answer: ${answer.correctAnswer}</div>
+                    </div>
+                `).join('');
+                
+                document.getElementById('reviewBtn').textContent = 'إخفاء المراجعة';
+            } else {
+                document.getElementById('reviewBtn').textContent = 'مراجعة الاختبار';
+            }
+        }
+
+        function backToLectures() {
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('lectureSelection').classList.remove('hidden');
+            
+            const canvas = document.getElementById('confettiCanvas');
+            if (canvas) canvas.remove();
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const app = document.getElementById('app');
+            const themeBtn = document.getElementById('themeToggle');
+            
+            if (isDarkMode) {
+                app.classList.remove('light-mode');
+                app.classList.add('dark-mode');
+                themeBtn.textContent = '🌙';
+            } else {
+                app.classList.remove('dark-mode');
+                app.classList.add('light-mode');
+                themeBtn.textContent = '☀️';
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function createConfetti() {
+            const canvas = document.createElement('canvas');
+            canvas.id = 'confettiCanvas';
+            canvas.className = 'confetti-canvas';
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            document.body.appendChild(canvas);
+            
+            const ctx = canvas.getContext('2d');
+            const particles = [];
+            
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    r: Math.random() * 6 + 4,
+                    d: Math.random() * 150,
+                    color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+                    tilt: Math.floor(Math.random() * 10) - 10,
+                    tiltAngleIncremental: Math.random() * 0.07 + 0.05,
+                    tiltAngle: 0
+                });
+            }
+            
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach((p, i) => {
+                    ctx.beginPath();
+                    ctx.lineWidth = p.r / 2;
+                    ctx.strokeStyle = p.color;
+                    ctx.moveTo(p.x + p.tilt + p.r, p.y);
+                    ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
+                    ctx.stroke();
+                    
+                    p.tiltAngle += p.tiltAngleIncremental;
+                    p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+                    p.tilt = Math.sin(p.tiltAngle - i / 3) * 15;
+                    
+                    if (p.y > canvas.height) {
+                        particles[i] = {
+                            ...p,
+                            x: Math.random() * canvas.width,
+                            y: -30
+                        };
+                    }
+                });
+                
+                requestAnimationFrame(draw);
+            }
+            
+            draw();
+            
+            setTimeout(() => {
+                canvas.remove();
+            }, 5000);
+        }
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'error') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function speakQuestion() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const questionText = currentLecture.questions[currentQuestionIndex].question;
+                const utterance = new SpeechSynthesisUtterance(questionText);
+                utterance.lang = 'en-US';
+                
+                const voices = window.speechSynthesis.getVoices();
+                const femaleVoice = voices.find(voice => 
+                    voice.lang.includes('en') && 
+                    (voice.name.includes('Female') || voice.name.includes('Zira') || voice.name.includes('Samantha') || voice.name.includes('Victoria') || voice.name.includes('Karen'))
+                );
+                
+                if (femaleVoice) {
+                    utterance.voice = femaleVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Your browser does not support text-to-speech.');
+            }
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('fullscreenToggle').addEventListener('click', toggleFullscreen);
+        document.getElementById('reviewBtn').addEventListener('click', reviewQuiz);
+        document.getElementById('backToLectures').addEventListener('click', backToLectures);
+
+        document.getElementById('downloadResultBtn').addEventListener('click', async () => {
+            if (typeof html2canvas !== 'undefined') {
+                const resultsContainer = document.querySelector('.results-container');
+                const actionButtons = document.querySelector('.action-buttons');
+                actionButtons.style.display = 'none';
+                
+                try {
+                    const canvas = await html2canvas(resultsContainer, {
+                        backgroundColor: isDarkMode ? '#1a1a2e' : '#f5f7fa',
+                        scale: 2
+                    });
+                    
+                    const link = document.createElement('a');
+                    link.download = `نتيجة-اختبار-${currentLecture.title}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                } catch (err) {
+                    console.error('Error capturing image:', err);
+                    alert('عذراً، حدث خطأ أثناء محاولة حفظ النتيجة.');
+                } finally {
+                    actionButtons.style.display = 'flex';
+                }
+            } else {
+                alert('عذراً، مكتبة التقاط الصور لم يتم تحميلها بشكل صحيح. تأكد من اتصالك بالإنترنت.');
+            }
+        });
+
+        async function onConfigChange(config) {
+            document.getElementById('platformTitle').textContent = config.platform_title || defaultConfig.platform_title;
+            document.getElementById('subjectName').textContent = config.subject_name || defaultConfig.subject_name;
+            document.getElementById('studentName').textContent = config.student_name || defaultConfig.student_name;
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [],
+                    borderables: [],
+                    fontEditable: undefined,
+                    fontSizeable: undefined
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["platform_title", config.platform_title || defaultConfig.platform_title],
+                    ["subject_name", config.subject_name || defaultConfig.subject_name],
+                    ["student_name", config.student_name || defaultConfig.student_name]
+                ])
+            });
+        }
+
+        preventCopyPaste();
+        renderLectures();
+        onConfigChange(defaultConfig);
+    </script>
+</body>
+</html>
